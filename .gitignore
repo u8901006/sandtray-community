@@ -1,0 +1,10 @@
+node_modules/
+.wrangler/
+.npm-cache/
+.env*
+!.env.example
+.dev.vars*
+apps/web/dist/
+dist/
+test-results/
+test-results-public/

@@ -1,0 +1,12 @@
+{
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  "name": "sandtray-community-local",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-09-06",
+  "workers_dev": false,
+  "assets": {"directory": "../web/dist", "binding": "ASSETS", "not_found_handling": "single-page-application", "run_worker_first": true},
+  "durable_objects": {"bindings": [{"name": "ROOM_DO", "class_name": "RoomDurableObject"}, {"name": "SCENE_COORDINATOR_DO", "class_name": "SceneCoordinatorDurableObject"}, {"name": "AUTH_DO", "class_name": "AuthDurableObject"}]},
+  "migrations": [{"tag": "v1", "new_sqlite_classes": ["RoomDurableObject", "SceneCoordinatorDurableObject"]}, {"tag": "v2", "new_sqlite_classes": ["AuthDurableObject"]}],
+  "r2_buckets": [{"binding": "PRIVATE_ASSETS", "bucket_name": "community-local-assets"}, {"binding": "PRIVATE_SCENES", "bucket_name": "community-local-scenes"}],
+  "d1_databases": [{"binding": "DIRECTORY", "database_name": "community-local-directory", "database_id": "00000000-0000-0000-0000-000000000001", "migrations_dir": "migrations"}]
+}

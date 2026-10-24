@@ -1,0 +1,26 @@
+{
+  "generator": "Headless Blender 5.2.1 LTS",
+  "source": "tools/assets/build_garden_pbr_v3.py",
+  "extentMeters": [
+    220,
+    220
+  ],
+  "files": {
+    "garden-ambience.wav": {
+      "bytes": 2304044,
+      "sha256": "f3d48a5e0b24a733fd091f3a65a56290df6b6bbbfa93dd63526e0e830787c4dd"
+    },
+    "garden-high.glb": {
+      "bytes": 22559976,
+      "sha256": "2f62b95cad3ff3def54746817247682ead200e647d275f7d4d6af44a02cf3d71"
+    },
+    "garden-low.glb": {
+      "bytes": 12004860,
+      "sha256": "18ae0d96c2a0d9d6c0f23496351054982b3453e1729ca972a9ea10ec5f05443b"
+    }
+  },
+  "materials": "material-sources.json",
+  "status": "LOCAL_BROWSER_VERIFIED_ART_REVIEW_PENDING",
+  "originalContentLicense": "AGPL-3.0-only",
+  "embeddedThirdPartyTexturesLicense": "CC0-1.0"
+}

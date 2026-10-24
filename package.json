@@ -1,0 +1,53 @@
+{
+  "name": "sandtray-community",
+  "private": true,
+  "version": "0.1.0-public.1",
+  "type": "module",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "engines": {
+    "node": ">=22.12.0 <23"
+  },
+  "scripts": {
+    "dev": "vite --config apps/web/vite.config.ts --host 127.0.0.1",
+    "dev:worker": "wrangler dev --config apps/worker/wrangler.jsonc --ip 127.0.0.1",
+    "build": "vite build --config apps/web/vite.config.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "contracts": "tsx tools/public-contracts.ts",
+    "verify:public": "node tools/verify-public.mjs",
+    "check": "npm run verify:public && npm run contracts && npm run typecheck && npm test && npm run build",
+    "worker:check": "wrangler deploy --dry-run --config apps/worker/wrangler.jsonc --outdir dist/worker",
+    "source:archive": "node tools/source-archive.mjs",
+    "test:browser": "node tools/verification/env-probe.mjs --glb apps/web/public/environments/garden-v3/garden-low.glb && playwright test --config playwright.public.config.ts"
+  },
+  "dependencies": {
+    "@react-three/drei": "10.7.8",
+    "@react-three/fiber": "9.7.0",
+    "ajv": "8.20.0",
+    "ajv-formats": "3.0.1",
+    "jose": "6.2.12",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "three": "0.185.1",
+    "zod": "4.5.4"
+  },
+  "devDependencies": {
+    "@apidevtools/swagger-parser": "13.0.0",
+    "@cloudflare/workers-types": "5.20260907.1",
+    "@playwright/test": "1.63.0",
+    "@types/node": "22.20.1",
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.7",
+    "@types/three": "0.185.4",
+    "@vitejs/plugin-react": "6.1.1",
+    "tsx": "4.23.13",
+    "typescript": "5.9.3",
+    "vite": "8.2.2",
+    "vitest": "5.0.0",
+    "wrangler": "4.129.1"
+  },
+  "license": "AGPL-3.0-only"
+}

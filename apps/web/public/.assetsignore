@@ -1,0 +1,3 @@
+# 2026-10-03 上線整合（Claude Opus 5.5）：部署環境不上傳發布授權待核對的 UNVERIFIED 素材（houshin-v1）。
+# 本機 vite dev 與 E2E 不受影響；核准後刪除此行即可。
+imported-assets/houshin-v1
