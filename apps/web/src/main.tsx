@@ -1,4 +1,4 @@
-import {SandtraySurface,type SandTool,type SculptHandlers,type HoverHandler} from './sandtray-surface';
+import {SandtraySurface,type TrayTool,type SculptHandlers,type HoverHandler} from './sandtray-surface';
 import {listableAsset} from './asset-listing';
 import {TrayModel,surfaceY,traySize,type Point} from './tray-model';
 import {trayOffsets,CAMERA_ANGLE,cameraView,type CameraKind} from './tray-layout';
@@ -10,7 +10,7 @@ import {Canvas,useThree,useFrame} from '@react-three/fiber';
 import {OrbitControls,TransformControls,Html} from '@react-three/drei';
 import {Group,Quaternion,Euler,Vector3,Plane,PCFShadowMap,type Mesh,type MeshBasicMaterial} from 'three';
 import {devAssets,readyAssetCount,resolveAsset,supportsColorVariants,COLOR_VARIANT_OPTIONS,type DevAssetId} from '../../../packages/asset-catalog/src/index';
-import {validTransform,colorVariantHex,clampToTray,trayHalfUnits,roomTraysSchema,STANDARD_ROOM_TRAYS,STANDARD_TRAY_CONFIG,type Transform,type ColorVariant,type TrayId,type TrayConfig,type RoomTrays} from '../../../packages/protocol/src/index';
+import {validTransform,colorVariantHex,SPRAY_COLORS,clampToTray,trayHalfUnits,roomTraysSchema,STANDARD_ROOM_TRAYS,STANDARD_TRAY_CONFIG,TUNNEL_DEFAULT,RIBBON_MAX,ribbonsWithoutObject,type Ribbon,type Tunnel,type TunnelStyle,type Transform,type ColorVariant,type TrayId,type TrayConfig,type RoomTrays} from '../../../packages/protocol/src/index';
 import {Model} from './catalog-model';
 import {api} from './shared-room';
 import './style.css';
@@ -36,11 +36,20 @@ import {CameraPoseBridge,type CameraPose} from './png-export';
 import {statusTone} from './status-tone';
 import {StatusChip} from './status-chip';
 import {pushRecent,toggleFavourite,visibleIds,readIds,writeIds,RECENT_KEY,FAVOURITE_KEY} from './shelf-memory';
-import {ToolIcon,ViewIcon,EyeIcon,ShelfIcon,DetailIcon} from './ui-icons';
+import {ToolIcon,ViewIcon,EyeIcon,ShelfIcon,DetailIcon,ScopeIcon,TunnelIcon,RibbonIcon} from './ui-icons';
+import {TunnelView,TunnelPanel} from './tunnel-view';
 import {focusPose,easeOut,lerp3,type Vec3} from './look-at-object';
 import {helpCards} from './help-cards';
 import {placeQuickTools,quickToolsTransform,type QuickToolsPlacement} from './quick-tools-placement';
 import {ObjectMark} from './object-mark';
+import {coveredIds,coveringCloths} from './cloth';
+import {RibbonsView,RibbonPanel} from './ribbon-view';
+import {pickRibbonObject} from './ribbon';
+import {Companion,CompanionSettings} from './companion-view';
+import {readCompanion,writeCompanion,type CompanionPrefs} from './companion';
+import {SCOPE_DURATIONS,SCOPE_DURATION_LABEL,SCOPE_ZOOM_DEFAULT,scopePose,scopeRemaining,formatRemaining,hiddenTrayOf,type Scope} from './telescope';
+                                                                                                   
+const deviceStorage=()=>{try{return localStorage;}catch{return undefined;}};
 const reducedMotion=()=>typeof matchMedia==='function'&&matchMedia('(prefers-reduced-motion: reduce)').matches;
 function readPref(key:string,fallback:boolean){try{const v=localStorage.getItem(key);return v===null?fallback:v==='1';}catch{return fallback;}}
 function writePref(key:string,value:boolean){try{localStorage.setItem(key,value?'1':'0');}catch{/* private window: the panel still toggles */}}
@@ -206,6 +215,13 @@ function HelpDialog({open,role,narrow,onClose}:{open:boolean;role:ViewerRole;nar
   <ol className="help-cards">{helpCards(role,narrow).map(card=><li key={card.title}><h3>{card.title}</h3>{card.lines.map(line=><p key={line}>{line}</p>)}</li>)}</ol></div>
  </dialog>;
 }
+                                                                                         
+function ScopeCountdown({endsAt,onDone}:{endsAt:number|null;onDone:()=>void}){
+ const [now,setNow]=useState(()=>Date.now());const done=useRef(onDone);done.current=onDone;
+ useEffect(()=>{if(endsAt===null)return;let fired=false;const tick=()=>{const t=Date.now();setNow(t);if(!fired&&t>=endsAt){fired=true;done.current();}};tick();const id=setInterval(tick,250);return()=>clearInterval(id);},[endsAt]);
+ const left=scopeRemaining(endsAt,now);
+ return <span className="scope-left" data-testid="scope-left">{left===null?'不限時':'剩 '+formatRemaining(left)}</span>;
+}
 const NARROW_QUERY='(max-width:760px)';
                                                                
 function useNarrow(){
@@ -247,8 +263,21 @@ function App(){
  useEffect(()=>{if(!narrow||!sheet)return;const esc=(e:KeyboardEvent)=>{if(e.key==='Escape')setSheet(null);};window.addEventListener('keydown',esc);return()=>window.removeEventListener('keydown',esc);},[narrow,sheet]);
                                  
  const [focus,setFocus]=useState<CameraFocus|null>(null);const [helpOpen,setHelpOpen]=useState(false);
+                                                                       
+                                                           
+ const [companion,setCompanionState]=useState<CompanionPrefs>(()=>readCompanion(deviceStorage()));const setCompanion=(next:CompanionPrefs)=>{setCompanionState(next);writeCompanion(deviceStorage(),next);};
+                                                                            
+ const [localTunnel,setLocalTunnel]=useState<Tunnel>(TUNNEL_DEFAULT);const [tunnelOpen,setTunnelOpen]=useState(false);
+                                                                                             
+ const [localRibbons,setLocalRibbons]=useState<Ribbon[]>([]);const [ribbonOpen,setRibbonOpen]=useState(false);const [ribbonPick,setRibbonPick]=useState<string[]>([]);const [ribbonColor,setRibbonColor]=useState(1);
+ const [scopeOpen,setScopeOpen]=useState(false);const [scope,setScope]=useState<Scope|null>(null);
+ const [scopeDraft,setScopeDraft]=useState<Scope>({tray:'dry',zoom:SCOPE_ZOOM_DEFAULT,duration:30});
+ const [scopeEndsAt,setScopeEndsAt]=useState<number|null>(null);
+ const scopeRestore=useRef<(()=>void)|null>(null);const hiddenTray=hiddenTrayOf(scope);
                                       
- const reframe=()=>setTimeout(()=>setView(v=>({kind:v.kind,tick:v.tick+1})),150);                          
+                                   
+ const scopeRef=useRef(scope);scopeRef.current=scope;
+ const reframe=()=>setTimeout(()=>{const sc=scopeRef.current,bridge=cameraPose.current;if(sc&&bridge){const pose=scopePose(sc.tray,sc.zoom,bridge.aspect(),trayConfigs);bridge.apply(pose.position,pose.target);return;}setView(v=>({kind:v.kind,tick:v.tick+1}));},150);                          
                                                             
  const [chromeOpen,setChromeOpen]=useState(()=>readPref('sandtray.chromeOpen',true));
                                                                                                           
@@ -266,21 +295,23 @@ function App(){
                                                                                                                                
                                                                            
  const [trays]=useState(()=>({dry:new TrayModel('dry'),wet:new TrayModel('wet')} as Record<TrayId,TrayModel>));
- const [sandTool,setSandTool]=useState<SandTool|null>(null);const [water,setWater]=useState(0);const waterTimer=useRef<ReturnType<typeof setTimeout>>(undefined);
+ const [sandTool,setSandTool]=useState<TrayTool|null>(null);const [sprayColor,setSprayColor]=useState(1);const [water,setWater]=useState(0);const waterTimer=useRef<ReturnType<typeof setTimeout>>(undefined);
                                                                                                                                                  
  const [localTrays,setLocalTrays]=useState<RoomTrays>(STANDARD_ROOM_TRAYS);
  const roomTrays=useMemo(()=>{const found=shared.scene?.trays;if(!roomId||!Array.isArray(found))return undefined;const pick=(id:TrayId)=>{const t=found.find((x:any)=>x.id===id);return t?.shape&&t.sizeCm?{shape:t.shape,...t.sizeCm}:STANDARD_TRAY_CONFIG;};const parsed=roomTraysSchema.safeParse({dry:pick('dry'),wet:pick('wet')});return parsed.success?parsed.data:undefined;},[roomId,shared.scene]);
  const trayConfigs=roomId?roomTrays??STANDARD_ROOM_TRAYS:localTrays;const offsets=useMemo(()=>trayOffsets(trayConfigs),[trayConfigs]);
  const [setupDraft,setSetupDraft]=useState<RoomTrays>(STANDARD_ROOM_TRAYS);
                                                                                                                             
- type LocalStep={trayId:TrayId;before:{data:Uint8Array;water:number};after:{data:Uint8Array;water:number}};
+                                                                                                                       
+ type TrayState={data:Uint8Array;water:number;paint:Uint8Array};
+ type LocalStep={trayId:TrayId;before:TrayState;after:TrayState};
  const localHistory=useRef<{undo:LocalStep[];redo:LocalStep[]}>({undo:[],redo:[]});
  const [localHistorySize,setLocalHistorySize]=useState([0,0]);
                                                                                                                 
  const groundY=(id:TrayId,x:number,z:number)=>Math.max(-1.5,Math.min(5,Number(surfaceY(trays[id].display,x,z).toFixed(3))));
- const trayState=(id:TrayId)=>({data:trays[id].confirmed.data.slice(),water:trays[id].water});
- function pushLocalStep(trayId:TrayId,before:{data:Uint8Array;water:number}){const h=localHistory.current;h.undo.push({trayId,before,after:trayState(trayId)});if(h.undo.length>50)h.undo.shift();h.redo=[];setLocalHistorySize([h.undo.length,0]);}
- function moveLocalHistory(direction:'undo'|'redo'){settleLocalWater(true);const h=localHistory.current,step=(direction==='undo'?h.undo:h.redo).pop();if(!step)return;(direction==='undo'?h.redo:h.undo).push(step);const state=direction==='undo'?step.before:step.after;trays[step.trayId].restoreLocal(state.data,state.water);if(step.trayId==='wet')setWater(state.water);setLocalHistorySize([h.undo.length,h.redo.length]);}
+ const trayState=(id:TrayId):TrayState=>({data:trays[id].confirmed.data.slice(),water:trays[id].water,paint:trays[id].confirmedPaint.slice()});
+ function pushLocalStep(trayId:TrayId,before:TrayState){const h=localHistory.current;h.undo.push({trayId,before,after:trayState(trayId)});if(h.undo.length>50)h.undo.shift();h.redo=[];setLocalHistorySize([h.undo.length,0]);}
+ function moveLocalHistory(direction:'undo'|'redo'){settleLocalWater(true);const h=localHistory.current,step=(direction==='undo'?h.undo:h.redo).pop();if(!step)return;(direction==='undo'?h.redo:h.undo).push(step);const state=direction==='undo'?step.before:step.after;trays[step.trayId].restoreLocal(state.data,state.water,state.paint);if(step.trayId==='wet')setWater(state.water);setLocalHistorySize([h.undo.length,h.redo.length]);}
  function applyLocalSetup(next:RoomTrays){settleLocalWater(false);setLocalTrays(next);trays.dry.configure(next.dry);trays.wet.configure(next.wet);setWater(0);localHistory.current={undo:[],redo:[]};setLocalHistorySize([0,0]);
                                                                      
   setItems(list=>list.map(item=>{const [x,z]=clampToTray(next[item.trayId??'dry'],item.transform.position[0],item.transform.position[2]);return {...item,transform:{...item.transform,position:[x,item.transform.position[1],z]}};}));
@@ -290,24 +321,42 @@ function App(){
  useEffect(()=>{shared.trayListener.current=message=>{const tray=trays[message.trayId as TrayId];if(tray&&!tray.replay(message))void shared.refresh().catch(shared.fail);};return()=>{shared.trayListener.current=null;};});
  useEffect(()=>{if(!shared.connected){trays.dry.clearPending();trays.wet.clearPending();}},[shared.connected,trays]);
  useEffect(()=>trays.wet.subscribe(()=>{if(!waterTimer.current)setWater(trays.wet.water);}),[trays]);
- useEffect(()=>{if(!canSculpt)setSandTool(null);},[canSculpt]);
+                                                                                                                      
+ const canSpray=!exploring&&(!roomId||!!shared.info?.role&&shared.connected);
+ useEffect(()=>{if(sandTool==='spray'?!canSpray:!canSculpt)setSandTool(null);},[canSculpt,canSpray,sandTool]);
+ const [painted,setPainted]=useState({dry:false,wet:false});
+ useEffect(()=>{const update=()=>setPainted(p=>{const next={dry:trays.dry.painted,wet:trays.wet.painted};return next.dry===p.dry&&next.wet===p.wet?p:next;});update();
+  const off=[trays.dry.subscribe(update),trays.wet.subscribe(update)];return()=>off.forEach(f=>f());},[trays]);
+ function washTray(id:TrayId){
+  if(!canSpray||!trays[id].painted)return;
+  if(roomId){void shared.send({type:'tray.wash',trayId:id},{quiet:true}).catch(shared.fail);}else{const before=trayState(id);trays[id].washLocal();pushLocalStep(id,before);}
+  setNotice((id==='dry'?'乾沙盤':'濕沙盤')+'的顏色已沖掉。'+(roomId&&shared.info?.role!=='client'?'':'可以用「復原」拿回來。'));
+ }
                                                                                                                                              
- const stroke=useRef<{trayId:TrayId;tool:SandTool;point:Point;timer:ReturnType<typeof setInterval>;batch?:string;count:number;opened:number;last:number;gesture:string;before?:{data:Uint8Array;water:number}}|null>(null);
+                                                                                                                                          
+                                                        
+ const stroke=useRef<{trayId:TrayId;tool:TrayTool;color:number;lastCell?:string;point:Point;timer:ReturnType<typeof setInterval>;batch?:string;count:number;opened:number;last:number;gesture:string;before?:TrayState}|null>(null);
  const sendRef=useRef(shared.send);sendRef.current=shared.send;
  function flushStroke(){const s=stroke.current;if(!s?.batch)return;const batch=s.batch,tray=trays[s.trayId],points=tray.pending.find(p=>p.id===batch)?.points.slice()??[];s.batch=undefined;s.count=0;
-  if(points.length)void sendRef.current({type:'sand.stroke',operationId:batch,trayId:s.trayId,tool:s.tool,points,gestureId:s.gesture},{quiet:true}).catch(()=>{tray.drop(batch);});}
+  if(!points.length)return;
+  const message=s.tool==='spray'?{type:'sand.spray',operationId:batch,trayId:s.trayId,color:s.color,points,gestureId:s.gesture}:{type:'sand.stroke',operationId:batch,trayId:s.trayId,tool:s.tool,points,gestureId:s.gesture};
+  void sendRef.current(message,{quiet:true}).catch(()=>{tray.drop(batch);});}
                                                                                                                            
                                                                                             
                                                                                                                                    
  function tickStroke(){const s=stroke.current;if(!s)return;const tray=trays[s.trayId],now=performance.now();
   const due=s.last?Math.min(4,Math.floor((now-s.last)/16)):1;if(!due)return;s.last=due===4?now:(s.last||now)+due*16;
+  if(s.tool==='spray'){const cell=s.point.join(',');if(cell===s.lastCell)return;s.lastCell=cell;
+   if(!roomId){tray.applyLocalSpray(s.color,s.point);return;}
+   if(!s.batch){s.batch=crypto.randomUUID();s.opened=now;}
+   tray.spray(s.batch,s.color,s.point);s.count++;if(s.count>=8||now-s.opened>=150)flushStroke();return;}
   for(let n=0;n<due;n++){
    if(!roomId){tray.applyLocal(s.tool,s.point);continue;}
    if(!s.batch){s.batch=crypto.randomUUID();s.opened=now;}
    tray.stroke(s.batch,s.tool,s.point);s.count++;if(s.count>=8||now-s.opened>=150)flushStroke();
   }}
- const sculpt:SculptHandlers={tool:canSculpt?sandTool:null,
-  start:(trayId,point)=>{if(stroke.current||!sandTool)return;if(!roomId)settleLocalWater(true);else{const sent=sendRoomWater();waterGesture.current=null;if(sent)void sent.catch(shared.fail);}stroke.current={trayId,tool:sandTool,point,count:0,opened:0,last:0,gesture:crypto.randomUUID(),...(roomId?{}:{before:trayState(trayId)}),timer:setInterval(tickStroke,16)};tickStroke();},
+ const sculpt:SculptHandlers={tool:sandTool==='spray'?(canSpray?'spray':null):canSculpt?sandTool:null,color:SPRAY_COLORS[sprayColor-1].hex,
+  start:(trayId,point)=>{if(stroke.current||!sandTool)return;if(!roomId)settleLocalWater(true);else{const sent=sendRoomWater();waterGesture.current=null;if(sent)void sent.catch(shared.fail);}stroke.current={trayId,tool:sandTool,color:sprayColor,point,count:0,opened:0,last:0,gesture:crypto.randomUUID(),...(roomId?{}:{before:trayState(trayId)}),timer:setInterval(tickStroke,16)};tickStroke();},
   move:point=>{if(stroke.current)stroke.current.point=point;},
   end:()=>{const s=stroke.current;if(!s)return;clearInterval(s.timer);flushStroke();stroke.current=null;if(s.before)pushLocalStep(s.trayId,s.before);}};
  useEffect(()=>()=>{if(stroke.current)clearInterval(stroke.current.timer);},[]);
@@ -315,7 +364,7 @@ function App(){
                                                                                                                                     
                                                                                                                                      
                                                                                                        
- const waterGesture=useRef<{id:string;at:number;before:{data:Uint8Array;water:number};timer?:ReturnType<typeof setTimeout>}|null>(null);
+ const waterGesture=useRef<{id:string;at:number;before:TrayState;timer?:ReturnType<typeof setTimeout>}|null>(null);
  function settleLocalWater(keep:boolean){const gesture=waterGesture.current;if(!gesture)return;clearTimeout(gesture.timer);waterGesture.current=null;if(keep&&!roomId&&gesture.timer!==undefined)pushLocalStep('wet',gesture.before);}
  useEffect(()=>{settleLocalWater(false);return()=>settleLocalWater(false);},[roomId]);
  function changeWater(level:number){setWater(level);const now=performance.now();
@@ -349,14 +398,25 @@ function App(){
                                                                  
  async function enterPhotoView(view:PhotoView){const bridge=cameraPose.current;if(!bridge)throw new Error('3D 畫面尚未準備好。');const restore=bridge.save();const next=cameraView(view==='birdseye'?'top':'angle',bridge.aspect(),trayConfigs);bridge.apply(next.position,next.target);
   await new Promise<void>(resolve=>requestAnimationFrame(()=>requestAnimationFrame(()=>resolve())));return restore;}
- const captureState=useRef({shared,items,loaded,contextLost});
- captureState.current={shared,items,loaded,contextLost};
+ const captureState=useRef({shared,items,loaded,contextLost,scope});
+ captureState.current={shared,items,loaded,contextLost,scope};
+                                                     
+ function startScope(next:Scope){const bridge=cameraPose.current;if(!bridge)return;
+  if(!scopeRestore.current)scopeRestore.current=bridge.save();const pose=scopePose(next.tray,next.zoom,bridge.aspect(),trayConfigs);bridge.apply(pose.position,pose.target);
+  if(!scope||scope.duration!==next.duration)setScopeEndsAt(next.duration===null?null:Date.now()+next.duration*1000);
+  setScope(next);setScopeDraft(next);setSelected(id=>{const it=items.find(i=>i.id===id);return it&&(it.trayId??'dry')!==next.tray?undefined:id;});setFocus(null);
+  setNotice('望遠鏡：只看'+(next.tray==='dry'?'乾沙盤':'濕沙盤')+'。另一盤只在你的畫面收起，對方看到的不變。');}
+                                                         
+ function endScope(restore:boolean,message='望遠鏡已收起，兩個沙盤都回來了。'){if(restore)scopeRestore.current?.();scopeRestore.current=null;setScope(null);setScopeEndsAt(null);setScopeOpen(false);if(message)setNotice(message);}
+ useEffect(()=>{if(exploring&&scope)endScope(false,'');},[exploring]);
  function verifyPng(){
   const state=captureState.current;
   if(garden.enabled&&garden.status!=='庭園已準備好')throw new Error('庭園尚未完整載入，請稍後再匯出。');
   if(!state.shared.connected||!state.shared.scene||state.contextLost)throw new Error('請先恢復連線與 3D 畫面，再匯出 PNG。');
   if(state.shared.hasUnconfirmedOperations()||state.items!==state.shared.scene.objects)throw new Error('作品仍在同步，請等待操作確認後匯出。');
   if(state.items.some(item=>item.animation?.state==='playing'))throw new Error('請先停止所有動作，再匯出 PNG。');
+                                
+  if(state.scope)throw new Error('請先收起望遠鏡，再匯出 PNG（望遠鏡開著時畫面只有一個沙盤）。');
   if(state.items.some(item=>state.loaded[item.id]!==true))throw new Error('模型尚未完整載入，請稍後重試。');
   return state.items;
  }
@@ -374,6 +434,34 @@ function App(){
                                                                                                                                    
  const seenItems=useRef<Set<string>|null>(null);
  useEffect(()=>{const seen=seenItems.current;seenItems.current=new Set(items.map(item=>item.id));if(!seen)return;for(const item of items)if(!seen.has(item.id)&&item.trayId==='wet')trays.wet.ripple(item.transform.position[0],item.transform.position[2],1);},[items,trays]);
+                                                                    
+ const tunnel:Tunnel=roomId?(shared.scene?.tunnel??TUNNEL_DEFAULT):localTunnel;
+ function changeTunnel(next:{enabled:boolean;style:TunnelStyle}){
+  if(!roomId){setLocalTunnel(t=>({...next,revision:t.revision+1}));return;}
+  void shared.send({type:'room.tunnel',...next,expectedTunnelRevision:tunnel.revision}).catch(()=>{});
+ }
+                                                                                                                                
+ const cover=useMemo(()=>coveringCloths(items,heights,id=>resolveAsset(id)?.displaySize),[items,heights]);
+ const covered=useMemo(()=>new Set(cover.keys()),[cover]);
+ const ribbons:Ribbon[]=roomId?(shared.scene?.ribbons??[]):localRibbons;
+ useEffect(()=>{setRibbonPick(list=>{const kept=list.filter(id=>items.some(item=>item.id===id)&&!covered.has(id));return kept.length===list.length?list:kept;});},[items,covered]);
+ function pickForRibbon(item:Item){const result=pickRibbonObject(ribbonPick,item,id=>{const found=items.find(i=>i.id===id);return found?found.trayId??'dry':undefined;});setRibbonPick(result.picked);if(result.notice)setNotice(result.notice);}
+ function tieRibbon(closed:boolean){
+  if(ribbonPick.length<2)return;if(ribbons.length>=RIBBON_MAX){setNotice(`緞帶最多 ${RIBBON_MAX} 條，請先拆掉一條。`);return;}
+  const ribbon:Ribbon={id:crypto.randomUUID(),objectIds:ribbonPick,closed,color:ribbonColor};setRibbonPick([]);
+  const done=closed?'已用緞帶圍起來。':'已用緞帶連起來。';
+  if(!roomId){setLocalRibbons(list=>[...list,ribbon]);setNotice(done);return;}
+  void shared.send({type:'ribbon.create',ribbonId:ribbon.id,objectIds:ribbon.objectIds,closed,color:ribbon.color}).then(()=>setNotice(done),()=>setNotice('緞帶沒有綁上，請再試一次。'));
+ }
+ function untieRibbon(ribbonId:string){
+  if(!roomId){setLocalRibbons(list=>list.filter(r=>r.id!==ribbonId));setNotice('已拆掉緞帶。');return;}
+  void shared.send({type:'ribbon.delete',ribbonId}).then(()=>setNotice('已拆掉緞帶。'),()=>setNotice('緞帶沒有拆掉，請再試一次。'));
+ }
+ function toggleRibbon(){setRibbonOpen(open=>{if(!open){setSelected(undefined);setPending(undefined);setSandTool(null);setNotice('緞帶：在沙盤上依序點要連在一起的物件。');}else setRibbonPick([]);return !open;});setTunnelOpen(false);setScopeOpen(false);}
+                                                                                                                                  
+ const heightsRef=useRef(heights);heightsRef.current=heights;
+ const coveredOf=useCallback((objects:readonly any[])=>coveredIds(objects,heightsRef.current,id=>resolveAsset(id)?.displaySize),[]);
+ useEffect(()=>{if(selected&&covered.has(selected)){setSelected(undefined);setNotice('這件物件已經在布下。');}},[covered,selected]);
  const current=items.find(i=>i.id===selected);const currentAsset=current?resolveAsset(current.assetId,current.assetVersion):undefined;
  const groups=useMemo(()=>shelfGroups(listable.map(a=>a.category)),[listable]);const activeGroup=groups.find(row=>row.group.id===group);
  const listableIds=useMemo(()=>new Set<string>(listable.map(a=>a.id)),[listable]);
@@ -382,7 +470,7 @@ function App(){
  const filtered=useMemo(()=>{const fav=group==='fav'?new Set(shownFavourites):null;const rows=listable.filter(a=>(fav?fav.has(a.id):category!=='全部'?a.category===category:!activeGroup||activeGroup.categories.includes(a.category))&&(a.name+' '+a.category+' '+a.sourcePack).toLowerCase().includes(search.toLowerCase()));
                                                                    
   return fav?rows.sort((a,b)=>shownFavourites.indexOf(a.id)-shownFavourites.indexOf(b.id)):rows;},[listable,category,search,activeGroup,group,shownFavourites]);
- function place(trayId:TrayId,x:number,z:number){if(!pending||exploring)return;if(items.length>=100){setNotice('沙盤最多放置 100 件物件。');return;}
+ function place(trayId:TrayId,x:number,z:number){if(!pending||exploring||trayId===hiddenTray)return;if(items.length>=100){setNotice('沙盤最多放置 100 件物件。');return;}
   const [cx,cz]=clampToTray(trayConfigs[trayId],x,z);const asset=resolveAsset(pending)!;const item:Item={id:crypto.randomUUID(),assetId:pending,assetVersion:asset.version,trayId,transform:{position:[cx,groundY(trayId,cx,cz),cz],rotation:[0,0,0,1],scale:1},materialOverrides:{},hidden:false,revision:0,...(supportsColorVariants(asset.id,asset.version)?{colorVariant:'t2' as const}:{})};
                                                                                                                                                          
   const remember=()=>setRecent(list=>{const next=pushRecent(list,item.assetId);writeIds(RECENT_KEY,next);return next;});
@@ -412,7 +500,7 @@ function App(){
                                                                      
  const clientWaiting=isClient&&shared.info?.admitted===false;
  const canRemove=!exploring&&(!roomId||!!shared.connected&&shared.info?.role==='client');
- function removeCurrent(){if(!current)return;if(roomId){void shared.send({type:'object.delete',objectId:current.id,expectedObjectRevision:(current as any).revision}).catch(shared.fail);return;}setItems(v=>v.filter(i=>i.id!==current.id));setLoaded(v=>{const next={...v};delete next[current.id];return next;});setSelected(undefined);setNotice('已移除物件。');}
+ function removeCurrent(){if(!current)return;if(roomId){void shared.send({type:'object.delete',objectId:current.id,expectedObjectRevision:(current as any).revision}).catch(shared.fail);return;}setItems(v=>v.filter(i=>i.id!==current.id));setLocalRibbons(v=>ribbonsWithoutObject(v,current.id));setLoaded(v=>{const next={...v};delete next[current.id];return next;});setSelected(undefined);setNotice('已移除物件。');}
                                                                   
  const turn=(delta:number)=>field('angle',((angle+delta+180)%360+360)%360-180);
                                                      
@@ -448,11 +536,11 @@ function App(){
                              
  const choose=(a:{id:DevAssetId;name:string})=>{setPending(a.id);setNotice('點沙盤放置「'+a.name+'」，或按「放在中央」。');if(narrow){setSheet(null);showTray();}};
                                                
- const lookAt=(item:Item,label:string)=>{const [x,y,z]=item.transform.position;
+ const lookAt=(item:Item,label:string)=>{const [x,y,z]=item.transform.position;if((item.trayId??'dry')===hiddenTray)endScope(false,'');
   setFocus(f=>({id:item.id,position:[offsets[item.trayId??'dry']+x,y,z],height:(heights[item.id]??0)*item.transform.scale,tick:(f?.tick??0)+1}));
   setNotice('鏡頭已轉向「'+label+'」，只有你的畫面改變。');if(narrow){setSheet(null);showTray();}};
  const focusItem=focus?items.find(i=>i.id===focus.id):undefined;
- return <div className={'app'+(isClient?' client-mode':'')+(chromeOpen?'':' chrome-collapsed')}>
+ return <div className={'app'+(isClient?' client-mode':'')+(chromeOpen?'':' chrome-collapsed')}><Companion prefs={companion}/>
   {!chromeOpen&&<div className="chrome-bar" data-testid="chrome-bar"><span className="brand-mark">◒</span><strong>一方沙盤</strong><span className="dot" style={{background:ROLE_COLOR[viewerRole]}}/><span>{roomId?(shared.info?.role==='client'?'案主':shared.info?.role==='therapist'?'治療師':'雙人會談'):'本機探索'}</span><span className="divider"/><span>{roomId?<StatusChip text={shared.status} testId="status-chip-bar"/>:'僅此頁暫存'}</span>{!!roomId&&!!peerStatusText(shared.info?.role,shared.info?.peerOnline)&&<span className={'peer-status'+(shared.info?.peerOnline?'':' away')} data-testid="peer-status-bar" role="status">{peerStatusText(shared.info?.role,shared.info?.peerOnline)}</span>}{!!roomId&&<span className="role-legend" data-testid="role-legend"><i style={{background:ROLE_COLOR.therapist}}/>治療師<i style={{background:ROLE_COLOR.client}}/>案主</span>}
    {/* 收起時仍要看見需要回應的事：等候入房、案主的操作請求、連線中斷。點提示即展開。 */}
    {!!roomId&&shared.info?.role==='therapist'&&shared.info.waitingClient&&<button className="chrome-alert tone-wait" onClick={toggleChrome}>有人在等候入房</button>}
@@ -462,7 +550,7 @@ function App(){
    <button className="chrome-toggle" aria-expanded={false} aria-controls="session-chrome" onClick={toggleChrome}>展開上方面板 ▾</button></div>}
   <div id="session-chrome" hidden={!chromeOpen}>
   <header><div className="brand"><span className="brand-mark">◒</span><div><h1>一方沙盤</h1><p>留一點空間，讓世界慢慢成形。</p></div></div><div className="session"><span className="dot" style={{background:ROLE_COLOR[viewerRole]}}/><span data-testid="session-mode">{roomId?(shared.info?.role==="client"?"雙人會談 · 案主":shared.info?.role==="therapist"?"雙人會談 · 治療師":"雙人會談"):"本機探索"}</span><span className="divider"/>{roomId?<StatusChip text={shared.status} testId="status-chip"/>:'僅此頁暫存'}{!!roomId&&!!peerStatusText(shared.info?.role,shared.info?.peerOnline)&&<span className={'peer-status'+(shared.info?.peerOnline?'':' away')} data-testid="peer-status" role="status">{peerStatusText(shared.info?.role,shared.info?.peerOnline)}</span>}{!!roomId&&<span className="role-legend" data-testid="role-legend"><i style={{background:ROLE_COLOR.therapist}}/>治療師<i style={{background:ROLE_COLOR.client}}/>案主</span>}<button className="chrome-toggle" aria-expanded={true} aria-controls="session-chrome" onClick={toggleChrome}>收起上方面板 ▴</button></div></header>
-  <SessionTools roomId={roomId} shared={shared} selected={selected} capturePng={capturePng} photoView={exploring?undefined:enterPhotoView} settleWater={settleRoomWater} onNotice={setToolsNotice}/>
+  <SessionTools roomId={roomId} shared={shared} selected={selected} capturePng={capturePng} photoView={exploring?undefined:enterPhotoView} settleWater={settleRoomWater} onNotice={setToolsNotice} coveredOf={coveredOf}/>
   </div>
   <div className={'workspace'+(exploring&&garden.focused?' garden-focused':'')+(libraryOpen?'':' library-closed')+(inspectorOpen?'':' inspector-closed')}>
    <aside id="library-panel" aria-label="物件架" className={'library'+(showLibrary?'':' collapsed')+(narrow?' sheet'+(showLibrary?' open':'')+(sheetFull?' full':''):'')}>
@@ -487,13 +575,15 @@ function App(){
    </>}</aside>
    <main>{(chromeOpen||exploring)&&<GardenControls garden={garden}/>}
     {/* 2026-10-10 user request: no heading row above the trays (the space goes to the trays); tests read data-items. */}
-    <div ref={viewportRef} className={'viewport '+(pending?'placing':'')} data-testid="viewport" data-items={items.length}>
+    <div ref={viewportRef} className={'viewport '+(pending?'placing':'')} data-testid="viewport" data-items={items.length} data-hidden-tray={hiddenTray??undefined} data-tunnel={tunnel.enabled?tunnel.style:'off'} data-ribbons={ribbons.length}>
      <Canvas shadows={garden.enabled?(garden.shadows?{type:PCFShadowMap}:false):(roomShadows?{type:PCFShadowMap}:false)} frameloop="demand" style={{position:'absolute',inset:0}} dpr={[1,1.5]} camera={{position:[...CAMERA_ANGLE],fov:42}} fallback={<p role="alert">此裝置無法啟用 3D，請改用支援 WebGL 的瀏覽器。</p>}>
       {garden.enabled?<GardenWorld garden={garden}/>:<RoomLighting ready={!contextLost} shadows={roomShadows} onShadows={setRoomShadows} mood={mood}/>}{!garden.enabled&&look.motes&&<FloatingMotes color={look.moteColor}/>}
       {exploring?<GardenWalk garden={garden}/>:<Camera view={view} trays={trayConfigs} focus={focus}/>}
       {focus&&focusItem&&!exploring&&<LocateRing key={focus.tick} position={[focus.position[0],focus.position[1]+Math.min(focus.height,4)*.4,focus.position[2]]}/>}<CanvasLifecycle onLost={onContextLost} onRestored={onContextRestored}/><PngCaptureBridge capture={pngCapture} verify={verifyPng}/><CameraPoseBridge pose={cameraPose}/>
-      <SandtraySurface models={trays} offsets={offsets} placing={!!pending} sculpt={sculpt} onHover={onHover} sky={{zenith:look.skyZenith,horizon:look.skyHorizon}} onPlace={(trayId,x,z,event)=>{if(exploring)return;if(pending)place(trayId,x,z);else if(event.delta<=4)setSelected(undefined);}}/>
-      {items.map(item=><group key={item.id} position={[offsets[item.trayId??'dry'],0,0]}><ObjectView item={item} waterY={item.trayId==='wet'?wetWaterY:undefined} glow={look.glow?glowOf(item.assetId,glowStrength):undefined} originX={offsets[item.trayId??'dry']} tray={trayConfigs[item.trayId??'dry']} groundAt={(x,z)=>groundY(item.trayId??'dry',x,z)} retryToken={modelRetries[item.id]??0} clockOffset={shared.info?.clockOffset??0} editable={!exploring&&(!roomId||shared.can(mode,item.id))} selected={item.id===selected&&!pending&&!exploring} ringColor={ROLE_COLOR[viewerRole]} heldByTherapist={!!roomId&&therapistHolds(shared.info?.grants,item.id)} dropIn={knownIds.current!==null&&!knownIds.current.has(item.id)} onDragStart={roomId?()=>shared.beginDrag(item.id):undefined} onDragMove={roomId?t=>shared.previewDrag(item.id,t):undefined} onDragCancel={roomId?()=>void shared.endDrag(item.id):undefined} mode={mode} onSelect={()=>{if(!pending&&!exploring)setSelected(item.id);}} onChange={t=>update(item.id,t)} roomId={roomId} onLoad={(ok,reason,size)=>{const height=size?.height;if(height)setHeights(s=>s[item.id]===height?s:{...s,[item.id]:height});setLoaded(s=>({...s,[item.id]:ok}));setLoadFailure(s=>({...s,[item.id]:ok===false?reason??'ERROR':undefined}));}}/></group>)}
+      <SandtraySurface models={trays} offsets={offsets} hidden={hiddenTray} placing={!!pending} sculpt={sculpt} onHover={onHover} sky={{zenith:look.skyZenith,horizon:look.skyHorizon}} onPlace={(trayId,x,z,event)=>{if(exploring)return;if(pending)place(trayId,x,z);else if(event.delta<=4)setSelected(undefined);}}/>
+      {tunnel.enabled&&!exploring&&<TunnelView key={tunnel.style} style={tunnel.style} trays={trayConfigs}/>}
+      {!exploring&&<RibbonsView ribbons={ribbons} preview={ribbonOpen&&ribbonPick.length>=2?{id:'preview',objectIds:ribbonPick,closed:false,color:ribbonColor}:null} items={items} heights={heights} offsets={offsets} cover={cover} hiddenTray={hiddenTray}/>}
+      {items.filter(item=>(item.trayId??'dry')!==hiddenTray).map(item=><group key={item.id} position={[offsets[item.trayId??'dry'],0,0]}><ObjectView item={item} waterY={item.trayId==='wet'?wetWaterY:undefined} glow={look.glow?glowOf(item.assetId,glowStrength):undefined} originX={offsets[item.trayId??'dry']} tray={trayConfigs[item.trayId??'dry']} groundAt={(x,z)=>groundY(item.trayId??'dry',x,z)} retryToken={modelRetries[item.id]??0} clockOffset={shared.info?.clockOffset??0} editable={!exploring&&!ribbonOpen&&(!roomId||shared.can(mode,item.id))} selected={(item.id===selected||ribbonOpen&&ribbonPick.includes(item.id))&&!pending&&!exploring} ringColor={ROLE_COLOR[viewerRole]} heldByTherapist={!!roomId&&therapistHolds(shared.info?.grants,item.id)} dropIn={knownIds.current!==null&&!knownIds.current.has(item.id)} onDragStart={roomId?()=>shared.beginDrag(item.id):undefined} onDragMove={roomId?t=>shared.previewDrag(item.id,t):undefined} onDragCancel={roomId?()=>void shared.endDrag(item.id):undefined} mode={mode} onSelect={()=>{if(pending||exploring)return;if(ribbonOpen){pickForRibbon(item);return;}setSelected(item.id);}} onChange={t=>update(item.id,t)} roomId={roomId} onLoad={(ok,reason,size)=>{const height=size?.height;if(height)setHeights(s=>s[item.id]===height?s:{...s,[item.id]:height});setLoaded(s=>({...s,[item.id]:ok}));setLoadFailure(s=>({...s,[item.id]:ok===false?reason??'ERROR':undefined}));}}/></group>)}
       {current&&!pending&&!exploring&&!sandTool&&<QuickToolsAnchor base={[offsets[current.trayId??'dry']+current.transform.position[0],current.transform.position[1],current.transform.position[2]]} height={(heights[current.id]??0)*current.transform.scale}>
         <button aria-label="向左轉 45 度" title="向左轉" disabled={!!roomId&&!shared.can('rotate',current.id)} onClick={()=>turn(-45)}>⟲</button>
         <button aria-label="向右轉 45 度" title="向右轉" disabled={!!roomId&&!shared.can('rotate',current.id)} onClick={()=>turn(45)}>⟳</button>
@@ -507,24 +597,39 @@ function App(){
      {contextLost&&<div className="canvas-message" role="alert">3D 顯示暫時中斷，正在等待裝置恢復。作品仍保留在本頁，請勿立即重新整理。</div>}
      {clientWaiting&&<div className="waiting-overlay" data-testid="waiting-overlay"><strong>正在等候治療師確認入房</strong><span>治療師確認後，沙盤會自動開啟，就可以開始擺放。</span><small>請保持這個頁面開著，不需要重新整理。</small></div>}
      {!exploring&&!clientWaiting&&!items.length&&!pending&&<div className="empty-hint"><span>你的世界，從這裡開始</span><small>選一件物件，或先轉轉視角。</small></div>}
-     {pending&&<div className="placement"><span>點一下沙盤（左：乾沙盤・右：濕沙盤），決定位置</span><button className="primary" onClick={()=>place('dry',0,0)}>放在中央</button><button onClick={()=>{setPending(undefined);setNotice('已取消放置。');}}>取消</button></div>}
+     {pending&&<div className="placement"><span>點一下沙盤（左：乾沙盤・右：濕沙盤），決定位置</span><button className="primary" onClick={()=>place(scope?.tray??'dry',0,0)}>放在中央</button><button onClick={()=>{setPending(undefined);setNotice('已取消放置。');}}>取消</button></div>}
      {!exploring&&<button className="help-button" aria-label="操作說明" title="操作說明" aria-haspopup="dialog" onClick={()=>setHelpOpen(true)}>?</button>}
-     {!exploring&&<div className="camera-tools" role="toolbar" aria-label="視角">{([['angle','斜視'],['top','俯視'],['low','盤邊視角'],['dry','聚焦乾沙盤'],['wet','聚焦濕沙盤']] as [CameraKind,string][]).map(([kind,label])=><button key={kind} aria-pressed={view.kind===kind} onClick={()=>setView(v=>({kind,tick:v.tick+1}))}><ViewIcon kind={kind}/><span>{label}</span></button>)}<button onClick={()=>setView(v=>({kind:'angle',tick:v.tick+1}))}><ViewIcon kind="reset"/><span>重置視角</span></button></div>}
+     {!exploring&&!garden.enabled&&!pending&&<button className={'scope-button'+(scope?' active':'')} aria-label={scope?'望遠鏡（使用中）':'望遠鏡'} title="望遠鏡：自己決定看哪一盤、多近、多久（只改變你的畫面）" aria-expanded={scopeOpen||!!scope} aria-controls="scope-panel" onClick={()=>{if(!scope)setScopeOpen(v=>!v);setTunnelOpen(false);setRibbonOpen(false);setRibbonPick([]);}}><ScopeIcon/></button>}
+     {!exploring&&!garden.enabled&&!pending&&<button className={'tunnel-button'+(tunnel.enabled?' active':'')} aria-label={tunnel.enabled?'隧道（已放）':'隧道'} title="隧道：在兩盤之間放一座隧道（會談中雙方都看得到）" aria-expanded={tunnelOpen} aria-controls="tunnel-panel" onClick={()=>{setTunnelOpen(v=>!v);setScopeOpen(false);setRibbonOpen(false);setRibbonPick([]);}}><TunnelIcon/></button>}
+     {!exploring&&!garden.enabled&&!pending&&<button className={'ribbon-button'+(ribbonOpen||ribbons.length?' active':'')} aria-label={ribbons.length?`緞帶（${ribbons.length} 條）`:'緞帶'} title="緞帶：把幾件物件連起來，或圍成一圈（會談中雙方都看得到）" aria-expanded={ribbonOpen} aria-controls="ribbon-panel" onClick={toggleRibbon}><RibbonIcon/></button>}
+     {!exploring&&!garden.enabled&&!pending&&ribbonOpen&&<RibbonPanel ribbons={ribbons} picked={ribbonPick} color={ribbonColor} disabled={!!roomId&&!shared.connected} onColor={setRibbonColor} onTie={tieRibbon} onClear={()=>setRibbonPick([])} onUntie={untieRibbon} onClose={()=>{setRibbonOpen(false);setRibbonPick([]);}}/>}
+     {!exploring&&!garden.enabled&&!pending&&tunnelOpen&&<TunnelPanel tunnel={tunnel} disabled={!!roomId&&!shared.connected} onChange={changeTunnel} onClose={()=>setTunnelOpen(false)}/>}
+     {!exploring&&!garden.enabled&&!pending&&(scopeOpen||scope)&&<div id="scope-panel" className="scope-panel" role="group" aria-label="望遠鏡">
+      <div className="scope-row" role="radiogroup" aria-label="看哪一盤">{(['dry','wet'] as const).map(t=><button key={t} role="radio" aria-checked={(scope??scopeDraft).tray===t} onClick={()=>scope?startScope({...scope,tray:t}):setScopeDraft(d=>({...d,tray:t}))}>{t==='dry'?'乾沙盤':'濕沙盤'}</button>)}</div>
+      <label className="scope-zoom"><span>遠</span><input aria-label="望遠鏡遠近" type="range" min="0" max="1" step="0.05" value={(scope??scopeDraft).zoom} onChange={e=>{const zoom=Number(e.target.value);if(scope)startScope({...scope,zoom});else setScopeDraft(d=>({...d,zoom}));}}/><span>近</span></label>
+      {!scope&&<><div className="scope-row" role="radiogroup" aria-label="看多久">{SCOPE_DURATIONS.map(d=><button key={String(d)} role="radio" aria-checked={scopeDraft.duration===d} onClick={()=>setScopeDraft(x=>({...x,duration:d}))}>{SCOPE_DURATION_LABEL[String(d)]}</button>)}</div>
+       <div className="scope-actions"><button className="primary" onClick={()=>startScope(scopeDraft)}>開始看</button><button onClick={()=>setScopeOpen(false)}>取消</button></div></>}
+      {scope&&<div className="scope-actions"><ScopeCountdown endsAt={scopeEndsAt} onDone={()=>endScope(true,'時間到，望遠鏡已收起，鏡頭回到原本的位置。')}/><button className="primary" onClick={()=>endScope(true)}>收起望遠鏡</button></div>}
+      <small>只改變你的畫面，對方看到的不變。</small>
+     </div>}
+     {!exploring&&<div className="camera-tools" role="toolbar" aria-label="視角">{([['angle','斜視'],['top','俯視'],['low','盤邊視角'],['dry','聚焦乾沙盤'],['wet','聚焦濕沙盤']] as [CameraKind,string][]).map(([kind,label])=><button key={kind} aria-pressed={!scope&&view.kind===kind} onClick={()=>{if(scope)endScope(false,'');setView(v=>({kind,tick:v.tick+1}));}}><ViewIcon kind={kind}/><span>{label}</span></button>)}<button onClick={()=>{if(scope)endScope(false,'');setView(v=>({kind:'angle',tick:v.tick+1}));}}><ViewIcon kind="reset"/><span>重置視角</span></button></div>}
      {!exploring&&!garden.enabled&&<div className="camera-tools mood-tools" role="toolbar" aria-label="光影" title="只改變這台裝置上的光線，不影響對方的畫面">{ROOM_MOODS.map(m=><button key={m} aria-pressed={mood===m} onClick={()=>setMood(m)}><span className="mood-swatch" style={{background:MOOD_LOOK[m].background}}/><span>{MOOD_LABEL[m]}</span></button>)}</div>}
      {!exploring&&!toolsOpen&&<div className="sand-tools collapsed" role="toolbar" aria-label="沙盤工具">
-      <button className="tools-toggle" aria-expanded={false} aria-label="展開沙盤工具" onClick={toggleTools}><ToolIcon tool={sandTool}/><span>{({dig:'挖沙',mound:'堆沙',smooth:'抹平'} as Record<string,string>)[sandTool??'']??'放置／檢視'}</span><span aria-hidden="true">▾</span></button>
+      <button className="tools-toggle" aria-expanded={false} aria-label="展開沙盤工具" onClick={toggleTools}><ToolIcon tool={sandTool}/><span>{({dig:'挖沙',mound:'堆沙',smooth:'抹平',spray:'噴色'} as Record<string,string>)[sandTool??'']??'放置／檢視'}</span><span aria-hidden="true">▾</span></button>
      </div>}
      {!exploring&&toolsOpen&&<div className="sand-tools" role="toolbar" aria-label="沙盤工具">
-      {([[null,'放置／檢視'],['dig','挖沙'],['mound','堆沙'],['smooth','抹平']] as [SandTool|null,string][]).map(([tool,label])=><button key={label} aria-pressed={sandTool===tool} disabled={tool!==null&&!canSculpt} onClick={()=>{setSandTool(tool);if(tool){setPending(undefined);setSelected(undefined);setNotice(label+'：在沙面上按住拖曳，橘色圈是一次的範圍。按住約一秒會挖到藍色盤底。');}}}><ToolIcon tool={tool}/><span>{label}</span></button>)}
+      {([[null,'放置／檢視'],['dig','挖沙'],['mound','堆沙'],['smooth','抹平'],['spray','噴色']] as [TrayTool|null,string][]).map(([tool,label])=><button key={label} aria-pressed={sandTool===tool} disabled={tool==='spray'?!canSpray:tool!==null&&!canSculpt} onClick={()=>{setSandTool(tool);if(tool){setPending(undefined);setSelected(undefined);setNotice(tool==='spray'?'噴色：選一個顏色，在沙面上按住拖曳。顏色代表什麼，由你自己決定。挖掉或堆上新沙的地方，顏色就沒了。':label+'：在沙面上按住拖曳，橘色圈是一次的範圍。按住約一秒會挖到藍色盤底。');}}}><ToolIcon tool={tool}/><span>{label}</span></button>)}
+      {sandTool==='spray'&&<div className="spray-colors" role="radiogroup" aria-label="噴色顏色">{SPRAY_COLORS.map((c,k)=><button key={c.hex} role="radio" aria-checked={sprayColor===k+1} aria-label={c.name} title={c.name} style={{background:c.hex}} onClick={()=>setSprayColor(k+1)}/>)}</div>}
+      {(['dry','wet'] as const).filter(id=>painted[id]).map(id=><button key={'wash-'+id} disabled={!canSpray} onClick={()=>washTray(id)}>{id==='dry'?'沖洗乾沙盤顏色':'沖洗濕沙盤顏色'}</button>)}
       <label className="water">濕沙盤水位 <output>{Math.round(water*100)}%</output><input aria-label="濕沙盤水位" type="range" min="0" max="1" step="0.05" value={water} disabled={!canSculpt} onChange={e=>changeWater(Number(e.target.value))}/></label>
       {!roomId&&<><button disabled={!localHistorySize[0]} onClick={()=>moveLocalHistory('undo')}>復原沙盤</button><button disabled={!localHistorySize[1]} onClick={()=>moveLocalHistory('redo')}>重做沙盤</button></>}
       <button className="tools-toggle" aria-expanded={true} aria-label="收起沙盤工具" onClick={toggleTools}><span>收起</span><span aria-hidden="true">▴</span></button>
       <small data-testid="water-hint">水只會出現在挖低的地方：先「挖沙」再調高水位。</small>
-      {!!roomId&&shared.info?.role==='client'&&<small>挖沙、堆沙與水位可用上方「復原／重做」退回，一次拖曳算一步。</small>}
-      {!!roomId&&shared.info?.role==='therapist'&&<small>挖沙與水位只由案主操作；治療師預設唯讀，移動或縮放物件需先請求案主同意。</small>}
+      {!!roomId&&shared.info?.role==='client'&&<small>挖沙、堆沙、噴色、沖洗與水位可用上方「復原／重做」退回，一次拖曳算一步。</small>}
+      {!!roomId&&shared.info?.role==='therapist'&&<small>挖沙與水位只由案主操作；噴色與沖洗兩邊都可以。移動或縮放物件需先請求案主同意。</small>}
      </div>}
     </div>
-    <div className="canvas-footer"><span role="status">{notice}</span>{!roomId&&items.some(item=>item.animation?.state==='playing')&&<button onClick={stopLocalAnimations}>停止所有動作</button>}<small>拖曳空白處轉視角 · 雙指調整視角</small></div>
+    <div className="canvas-footer"><span role="status">{notice}</span>{!roomId&&items.some(item=>item.animation?.state==='playing')&&<button onClick={stopLocalAnimations}>停止所有動作</button>}<CompanionSettings prefs={companion} onChange={setCompanion}/><small>拖曳空白處轉視角 · 雙指調整視角</small></div>
    </main>
    <aside id="inspector-panel" aria-label="物件細節" className={'inspector'+(showInspector?'':' collapsed')+(narrow?' sheet'+(showInspector?' open':'')+(sheetFull?' full':''):'')}>
     {narrow?<SheetHead full={sheetFull} name="物件細節" onSize={()=>setSheetFull(v=>!v)} onClose={()=>setSheet(null)}/>:<button className="panel-toggle" aria-expanded={inspectorOpen} aria-label={inspectorOpen?'收起物件細節':'展開物件細節'} onClick={toggleInspector}>{inspectorOpen?'›':'‹'}</button>}
@@ -544,9 +649,12 @@ function App(){
      <button className="remove" disabled={!canRemove} onClick={removeCurrent}>移除這件物件</button>
      <details><summary>位置數值</summary><output data-testid="transform">{JSON.stringify(current.transform)}</output></details>
     </>}
-    {items.length>0&&<div className="scene-list"><h3>沙盤裡的物件</h3>{items.map((item,i)=>{const label=devAssets.find(a=>a.id===item.assetId)!.name+' '+(i+1);
+    {items.length>0&&<div className="scene-list"><h3>沙盤裡的物件</h3>{items.map((item,i)=>{
+     if(covered.has(item.id))return <div key={item.id} className="scene-row covered" role="group" aria-label={'布下的東西 '+(i+1)}><button disabled aria-pressed={false} title="在布下，掀開布才看得到"><span className="covered-mark" aria-hidden="true"/><span>布下的東西 {i+1}</span></button>
+      <button className="look-at" aria-label="看這件" title="在布下" disabled><EyeIcon/></button></div>;
+     const label=devAssets.find(a=>a.id===item.assetId)!.name+' '+(i+1);
                                                                 
-     return <div key={item.id} className="scene-row" role="group" aria-label={label}><button aria-pressed={selected===item.id} onClick={()=>{setSelected(item.id);setPending(undefined);}}><ObjectMark object={item}/><span>{label}</span></button>
+     return <div key={item.id} className="scene-row" role="group" aria-label={label}><button aria-pressed={ribbonOpen?ribbonPick.includes(item.id):selected===item.id} onClick={()=>{if(ribbonOpen){pickForRibbon(item);return;}if((item.trayId??'dry')===hiddenTray)endScope(false,'');setSelected(item.id);setPending(undefined);}}><ObjectMark object={item}/><span>{label}</span></button>
       <button className="look-at" aria-label="看這件" title="看這件（只轉動你的鏡頭）" disabled={exploring} onClick={()=>lookAt(item,label)}><EyeIcon/></button></div>;})}</div>}
     <div className="privacy-note">本機練習原型<p>{roomId?'會談期間暫存於伺服器。重新連線保留已確認作品，但操作授權必須重新取得。':'目前未連線治療師，也不會保存作品。重新整理後會清空。'}</p></div>
    </>}</aside>

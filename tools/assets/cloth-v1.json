@@ -1,0 +1,15 @@
+{
+  "batch": "cloth-v1",
+  "sourcePack": "本專案程序化建模",
+  "models": "tools/assets/cloth-v1/models.js",
+  "idPrefix": "CLT_",
+  "versionPrefix": "clt-",
+  "color": "#5f7287",
+  "maxBytes": 600000,
+  "maxTriangles": 20000,
+  "note": "2026-10-30 使用者裁定「方布加長布」（不改協定，只用等比縮放）與「布底下的東西，治療師看不到」（雙方都看不到）。不透明蓋布：平頂、圓肩、裙擺垂到沙面。顏色避開白與黑（喪葬聯想）。displaySize 讓布在縮放 1 時頂高約一個站立人偶。無來源檔，由 Claude Opus 5.5 程序化建模。status 未設＝IMPORTED_UNREVIEWED。",
+  "items": [
+    {"slug": "square_cloth", "name": "方布", "category": "布", "displaySize": 3.0},
+    {"slug": "long_cloth", "name": "長布", "category": "布", "displaySize": 5.0}
+  ]
+}

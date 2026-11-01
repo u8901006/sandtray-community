@@ -1,0 +1,16 @@
+{
+  "batch": "tunnel-v1",
+  "sourcePack": "本專案程序化建模",
+  "models": "tools/assets/tunnel-v1/models.js",
+  "idPrefix": "TUN_",
+  "versionPrefix": "tun-",
+  "color": "#8f8a80",
+  "maxBytes": 1000000,
+  "maxTriangles": 20000,
+  "note": "2026-10-30 使用者先裁定「隧道可以放」並指示「開始做隧道」；同日更正：「隧道是在兩個沙盤之間，不是在沙盤裡面」，並裁定隧道只是連接的樣子（物件不換盤）、案主與治療師都能開關、外觀可選。同日裁定下架彎道隧道（兩端洞口夾 90°，無法同時朝向兩盤）。所以這三件不上沙盤物件架，是「兩盤之間隧道」的三種外觀候選；放進兩盤間隙的大小與方向由該功能決定。三件皆兩端開口、無底。無來源檔，由 Claude Opus 5.5 程序化建模。status 未設＝IMPORTED_UNREVIEWED。",
+  "items": [
+    {"slug": "arch_short", "name": "短拱隧道", "category": "隧道"},
+    {"slug": "tunnel_long", "name": "長隧道", "category": "隧道"},
+    {"slug": "play_tunnel", "name": "布製遊戲隧道", "category": "隧道"}
+  ]
+}

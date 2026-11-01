@@ -1,16 +1,16 @@
 ---
 title: "Sandtray Community — 公開候選版"
-description: "可自行架設的雙人 3D 沙盤；270 件 CC0 模型、16 件庭園植被與自然庭園。"
-date: 2026-10-24
+description: "可自行架設的雙人 3D 沙盤；270 件 CC0 模型、16 件庭園植被、自製布與隧道及自然庭園。"
+date: 2026-11-01
 tags: [sandtray, community, self-hosted]
 ---
 # Sandtray Community
 
-公開儲存庫：https://github.com/u8901006/sandtray-community 。此為 0.1.0-public.1 候選預覽版。
+公開儲存庫：https://github.com/u8901006/sandtray-community 。此為 0.1.0-public.2 候選預覽版。
 
-雙人 3D 沙盤，包含兩座沙盤、物件擺放與動畫、逐物件操作授權、撤回、同步、會談內保存恢復、PNG 匯出，以及可探索的自然庭園。本版本是公開候選版，尚未完成正式臨床發布驗收。
+雙人 3D 沙盤，包含兩座沙盤、物件擺放與動畫、逐物件操作授權、撤回、同步、會談內保存恢復、PNG 匯出、蓋布、兩盤之間隧道、緞帶連結、情緒噴罐、望遠鏡與小夥伴，以及可探索的自然庭園。本版本是公開候選版，尚未完成正式臨床發布驗收。
 
-程式碼、專案自製練習模型、庭園原創部分與合成音效：**AGPL-3.0-only**。270 件 Kenney／Quaternius 模型、16 件庭園植被及庭園內的 Poly Haven 貼圖維持 **CC0-1.0**，詳見 [素材與授權](THIRD_PARTY_NOTICES.md)。
+程式碼、專案自製練習模型、程序化建模的布與隧道、庭園原創部分與合成音效：**AGPL-3.0-only**。270 件 Kenney／Quaternius 模型、16 件庭園植被及庭園內的 Poly Haven 貼圖維持 **CC0-1.0**，詳見 [素材與授權](THIRD_PARTY_NOTICES.md)。
 
 ## 本機開始
 

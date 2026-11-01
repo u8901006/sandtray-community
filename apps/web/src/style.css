@@ -188,3 +188,48 @@ main{padding:12px 10px 0}
  .scene-list h3{background:#fbfaf5}
  .help-cards{grid-template-columns:1fr}
 }
+/* 2026-10-30 望遠鏡：右上「?」下方的按鈕與面板（只改變自己的畫面）。 */
+.scope-button{position:absolute;top:62px;right:10px;z-index:3;width:44px;height:44px;border-radius:50%;background:#fffdf8;border:1px solid #d6dac9;box-shadow:0 2px 8px #0002;color:#587361;display:grid;place-items:center;padding:0}
+.scope-button.active{background:#e6ebdf;border-color:#6c8566}
+.scope-panel{position:absolute;top:12px;right:70px;z-index:4;width:min(272px,calc(100% - 86px));display:grid;gap:10px;padding:12px;background:#fffdf8;border:1px solid #d6dac9;border-radius:10px;box-shadow:0 4px 14px #0002;font-size:13px}
+.scope-row{display:flex;gap:6px;flex-wrap:wrap}.scope-row button{flex:1;min-height:40px;padding:6px 8px;border-radius:7px;background:#eeeee5}.scope-row button[aria-checked=true]{background:#5f7764;color:#fff}
+.scope-zoom{display:flex;align-items:center;gap:8px;font-size:12px;color:#687263}.scope-zoom input{flex:1;min-width:0;accent-color:#6c8566;min-height:32px}
+.scope-actions{display:flex;align-items:center;gap:8px;justify-content:flex-end}.scope-actions button{min-height:40px;padding:6px 12px;border-radius:7px;background:#eeeee5}.scope-actions .primary{background:#5f7764;color:#fff}.scope-left{margin-right:auto;font-variant-numeric:tabular-nums;color:#3d5140}
+.scope-panel small{font-size:11px;color:#85897d}
+.placing .scope-button,.placing .scope-panel{display:none}
+/* 2026-10-30 TUN-01 隧道：望遠鏡下方的圓鈕與面板。 */
+.tunnel-button{position:absolute;top:114px;right:10px;z-index:3;width:44px;height:44px;border-radius:50%;background:#fffdf8;border:1px solid #d6dac9;box-shadow:0 2px 8px #0002;color:#587361;display:grid;place-items:center;padding:0}
+.tunnel-button.active{background:#e6ebdf;border-color:#6c8566}
+.tunnel-panel{position:absolute;top:114px;right:62px;z-index:4;width:min(300px,calc(100% - 76px));display:grid;gap:10px;padding:12px;background:#fffdf8;border:1px solid #d6dac9;border-radius:10px;box-shadow:0 4px 14px #0002;font-size:13px;color:#343e37}
+.tunnel-switch{display:flex;align-items:center;gap:8px;min-height:36px}
+.tunnel-row{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.tunnel-row button{display:grid;justify-items:center;gap:4px;min-height:44px;padding:6px 4px;border-radius:7px;background:#eeeee5;font-size:11px}.tunnel-row button[aria-checked=true]{background:#5f7764;color:#fff}.tunnel-row img{width:48px;height:48px;object-fit:contain;border-radius:5px;background:#fff}.tunnel-row button:disabled{opacity:.45;cursor:not-allowed}
+.tunnel-panel small{font-size:11px;color:#85897d;line-height:1.6}.tunnel-panel>button{justify-self:end;min-height:36px;padding:6px 12px;border-radius:7px;background:#eeeee5}
+/* RIB-01 緞帶：按鈕在隧道下方，面板與隧道面板同一欄。 */
+.ribbon-button{position:absolute;top:166px;right:10px;z-index:3;width:44px;height:44px;border-radius:50%;background:#fffdf8;border:1px solid #d6dac9;box-shadow:0 2px 8px #0002;color:#587361;display:grid;place-items:center;padding:0}
+.ribbon-button.active{background:#e6ebdf;border-color:#6c8566}
+.ribbon-panel{position:absolute;top:114px;right:62px;z-index:4;width:min(300px,calc(100% - 76px));max-height:calc(100% - 128px);overflow-y:auto;display:grid;gap:10px;padding:12px;background:#fffdf8;border:1px solid #d6dac9;border-radius:10px;box-shadow:0 4px 14px #0002;font-size:13px;color:#343e37}
+.ribbon-panel .spray-colors{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}.ribbon-panel .spray-colors button{aspect-ratio:1;min-height:30px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px #c9cdbd}.ribbon-panel .spray-colors button[aria-checked=true]{box-shadow:0 0 0 3px #343e37}
+.ribbon-hint{margin:0;line-height:1.6}
+.ribbon-actions{display:flex;flex-wrap:wrap;gap:6px}.ribbon-actions button{min-height:36px;padding:6px 12px;border-radius:7px;background:#eeeee5}.ribbon-actions button.primary{background:#5f7764;color:#fff}.ribbon-actions button:disabled{opacity:.45}
+.ribbon-list{list-style:none;margin:0;padding:0;display:grid;gap:6px}.ribbon-list li{display:grid;grid-template-columns:14px 1fr auto;align-items:center;gap:8px}.ribbon-list button{min-height:32px;padding:4px 10px;border-radius:7px;background:#eeeee5}
+.ribbon-swatch{width:14px;height:14px;border-radius:50%;box-shadow:0 0 0 1px #c9cdbd}
+.ribbon-panel small{font-size:11px;color:#85897d;line-height:1.6}.ribbon-panel>button{justify-self:end;min-height:36px;padding:6px 12px;border-radius:7px;background:#eeeee5}
+.placing .ribbon-button,.placing .ribbon-panel{display:none}
+@media(max-width:760px){.ribbon-panel{top:auto;bottom:8px;left:8px;right:8px;width:auto;max-height:46%;z-index:6;gap:8px;padding:10px}.ribbon-panel .spray-colors{grid-template-columns:repeat(12,minmax(0,1fr));gap:4px}.ribbon-panel .spray-colors button{min-height:0;border-width:1px}.ribbon-panel small{display:none}}
+/* 2026-10-30 布：布下的物件在清單只顯示一塊布色方塊，不露出名稱與縮圖。 */
+.scene-row.covered button{color:#85897d;cursor:default}.covered-mark{display:inline-block;width:18px;height:14px;border-radius:3px;background:#5f7287;margin-right:6px;vertical-align:-2px}
+/* 2026-10-30 陪伴小夥伴：2D 疊層，只有自己看得到。跟著游標時不接收點擊；停在角落時可以摸頭、拖動。減少動態時完全靜止。 */
+.companion{position:fixed;left:0;top:0;width:64px;height:64px;z-index:60;touch-action:none;user-select:none;-webkit-user-select:none;will-change:transform}
+.companion svg{width:100%;height:100%;display:block;overflow:visible}
+.companion.follow{pointer-events:none;transition:opacity .14s ease-out}
+.companion.park{pointer-events:auto;cursor:grab}.companion.park.dragging{cursor:grabbing}
+.companion .eyes-happy{display:none}.companion.patting .eyes-happy{display:inline}.companion.patting .eyes-open{display:none}
+@media (prefers-reduced-motion:no-preference){.companion .body{transform-box:fill-box;transform-origin:50% 100%;animation:companion-breathe 4.2s ease-in-out infinite}.companion .eyes-open{transform-box:fill-box;transform-origin:50% 50%;animation:companion-blink 6s infinite}.companion.patting svg{animation:companion-nuzzle .9s ease-in-out infinite}}
+@keyframes companion-breathe{50%{transform:scaleY(1.035)}}@keyframes companion-blink{0%,96%,100%{transform:scaleY(1)}98%{transform:scaleY(.1)}}@keyframes companion-nuzzle{50%{transform:rotate(-4deg)}}
+.canvas-footer{position:relative}.companion-settings{position:relative;margin-left:auto}
+.companion-toggle{min-height:36px;padding:6px 12px;border-radius:999px;border:1px solid #d6dac9;background:#fffdf8;font-size:12px;color:#587361}
+.companion-panel{position:absolute;right:0;bottom:calc(100% + 8px);z-index:61;width:min(260px,80vw);display:grid;gap:10px;padding:12px;background:#fffdf8;border:1px solid #d6dac9;border-radius:10px;box-shadow:0 4px 14px #0002;font-size:13px;color:#343e37}
+.companion-switch{display:flex;align-items:center;gap:8px;min-height:36px}.companion-row{display:flex;gap:6px;flex-wrap:wrap}.companion-row button{flex:1;min-height:40px;padding:6px 8px;border-radius:7px;background:#eeeee5}.companion-row button[aria-checked=true]{background:#5f7764;color:#fff}.companion-row button:disabled{opacity:.45;cursor:not-allowed}
+.companion-row.animals{display:grid;grid-template-columns:repeat(3,1fr)}.companion-row.animals button{white-space:nowrap;padding:6px 4px}
+.companion-panel small{font-size:11px;color:#85897d;line-height:1.6}.companion-panel>button{justify-self:end;min-height:36px;padding:6px 12px;border-radius:7px;background:#eeeee5}
+.sand-tools .spray-colors{display:flex;flex-wrap:wrap;gap:4px;padding:2px 6px;flex-basis:100%}.sand-tools .spray-colors button{width:26px;height:26px;padding:0;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px #9aa08c}.sand-tools .spray-colors button[aria-checked=true]{box-shadow:0 0 0 3px #1f5f8b}

@@ -50,6 +50,15 @@ export function clampToTray(tray: TrayConfig, x: number, z: number): [number, nu
 }
 export const sandToolSchema = z.enum(['dig','mound','smooth']);
 export type SandTool = z.infer<typeof sandToolSchema>;
+                                                                                                                                     
+                                                                                                                                      
+                                                                                                                                    
+export const SPRAY_COLORS = [
+  {hex:'#D9534F',name:'紅'},{hex:'#F0883E',name:'橘'},{hex:'#F2C94C',name:'黃'},{hex:'#4CAF6E',name:'綠'},
+  {hex:'#3FB5B0',name:'青'},{hex:'#5AA9E6',name:'天藍'},{hex:'#3D63C9',name:'藍'},{hex:'#8A5CC7',name:'紫'},
+  {hex:'#E77FB3',name:'粉紅'},{hex:'#8B5E3C',name:'棕'},{hex:'#F4F4EE',name:'白'},{hex:'#34343C',name:'黑'},
+] as const;
+export const sprayColorSchema = z.number().int().min(1).max(SPRAY_COLORS.length);
                                                                                                             
 const cellPoint = z.tuple([z.number().int().min(0).max(239), z.number().int().min(0).max(239)]);
 export const transformSchema = z.strictObject({
@@ -97,18 +106,45 @@ export const traySchema=z.strictObject({
   id,kind:z.enum(['dry','wet']),shape:z.enum(['rect','square','circle','octagon']),
   sizeCm:z.strictObject({w:centimeter,h:centimeter,depth:z.number().int().min(5).max(10)}),
   heightmap:heightmapSchema,waterLevel:z.number().min(0).max(1),baseColor:color,
-                                                                                                                            
+                                                                                                                                    
+                                      
+  paint:heightmapSchema.optional(),
+                                                                                                                                                     
   revision:counter.optional(),
 }).superRefine((tray,ctx)=>{
   if(tray.heightmap.w!==tray.sizeCm.w*2||tray.heightmap.h!==tray.sizeCm.h*2)ctx.addIssue({code:'custom',message:'Heightmap resolution must be two cells per centimeter'});
   if(tray.shape!=='rect'&&tray.sizeCm.w!==tray.sizeCm.h)ctx.addIssue({code:'custom',message:'Square and round trays require equal width and height'});
   if(tray.kind==='dry'&&tray.waterLevel!==0)ctx.addIssue({code:'custom',message:'Dry trays must have waterLevel 0'});
+  if(tray.paint&&(tray.paint.w!==tray.heightmap.w||tray.paint.h!==tray.heightmap.h))ctx.addIssue({code:'custom',message:'Paint map must match the heightmap'});
 });
 export const sceneObjectV2Schema=sceneObjectSchema.extend({trayId:id});
+                                                                                                                                     
+                                                                                                                                      
+export const tunnelStyleSchema=z.enum(['arch_short','tunnel_long','play_tunnel']);
+export type TunnelStyle=z.infer<typeof tunnelStyleSchema>;
+export const tunnelSchema=z.strictObject({enabled:z.boolean(),style:tunnelStyleSchema,revision:counter});
+export type Tunnel=z.infer<typeof tunnelSchema>;
+export const TUNNEL_DEFAULT:Tunnel={enabled:false,style:'arch_short',revision:0};
+                                                                                                                                          
+                                                                                                                                         
+                                                                                                                                       
+export const RIBBON_MAX=24;
+export const ribbonSchema=z.strictObject({id,objectIds:z.array(id).min(2).max(6),closed:z.boolean(),color:sprayColorSchema});
+export type Ribbon=z.infer<typeof ribbonSchema>;
+                                                                                                                                           
+                                                                                               
+export function ribbonsWithoutObject<T extends Ribbon>(ribbons:readonly T[],objectId:string):T[]{
+  const out:T[]=[];
+  for(const ribbon of ribbons){const objectIds=ribbon.objectIds.filter(id=>id!==objectId);if(objectIds.length>=2)out.push(objectIds.length===ribbon.objectIds.length?ribbon:{...ribbon,objectIds});}
+  return out;
+}
 export const sceneSnapshotV2Schema=z.strictObject({
   schemaVersion:z.literal(2),sceneId:id,sceneRevision:counter,
   trays:z.tuple([traySchema,traySchema]),objects:z.array(sceneObjectV2Schema).max(100),
   environment:z.strictObject({sandColor:color,backgroundColor:color}),updatedAt:time,
+  tunnel:tunnelSchema.optional(),
+                                                                                                          
+  ribbons:z.array(ribbonSchema).max(RIBBON_MAX).optional(),
 }).superRefine((scene,ctx)=>{
   const trayIds=new Set(scene.trays.map(tray=>tray.id));
   const kinds=scene.trays.map(tray=>tray.kind);
@@ -116,6 +152,10 @@ export const sceneSnapshotV2Schema=z.strictObject({
   if(trayIds.size!==2||new Set(kinds).size!==2||scene.trays[0].kind!=='dry'||scene.trays[1].kind!=='wet')ctx.addIssue({code:'custom',message:'A scene must contain dry-left and wet-right trays with unique ids'});
   if(objectIds.size!==scene.objects.length)ctx.addIssue({code:'custom',message:'Scene object ids must be unique'});
   for(const object of scene.objects)if(!trayIds.has(object.trayId))ctx.addIssue({code:'custom',message:'Unknown trayId: '+object.trayId});
+  for(const ribbon of scene.ribbons??[]){
+    const trays=new Set(ribbon.objectIds.map(objectId=>scene.objects.find(object=>object.id===objectId)?.trayId));
+    if(new Set(ribbon.objectIds).size!==ribbon.objectIds.length||trays.has(undefined)||trays.size!==1)ctx.addIssue({code:'custom',message:'A ribbon links distinct objects of one tray: '+ribbon.id});
+  }
 });
 export type SceneSnapshotV2=z.infer<typeof sceneSnapshotV2Schema>;
 function encodeBase64(bytes:Uint8Array){
@@ -167,6 +207,9 @@ export const inboundSchemas = {
                                                                                                                                
   'sand.stroke': command('sand.stroke', {trayId: trayIdSchema, tool: sandToolSchema, points: z.array(cellPoint).min(1).max(8), gestureId: id.optional()}),
   'tray.water': command('tray.water', {trayId: z.literal('wet'), level: z.number().min(0).max(1), gestureId: id.optional()}),
+                                                                                                                                         
+  'sand.spray': command('sand.spray', {trayId: trayIdSchema, color: sprayColorSchema, points: z.array(cellPoint).min(1).max(8), gestureId: id.optional()}),
+  'tray.wash': command('tray.wash', {trayId: trayIdSchema}),
   'object.delete': command('object.delete', {objectId: id, expectedObjectRevision: counter}),
   'object.lock.acquire': command('object.lock.acquire', {objectId: id, actions: z.array(actionSchema).min(1).max(4), grantId: id.optional(), grantVersion: counter.optional()}),
   'object.lock.renew': command('object.lock.renew', fenced),
@@ -181,6 +224,11 @@ export const inboundSchemas = {
   'permission.revoke': command('permission.revoke', {objectId: id, grantId: id}),
   'control.revokeAll': command('control.revokeAll', {}),
   'animation.stopAll': command('animation.stopAll', {}),
+                                                                                                     
+  'room.tunnel': command('room.tunnel', {enabled: z.boolean(), style: tunnelStyleSchema, expectedTunnelRevision: counter}),
+                                                                                                                          
+  'ribbon.create': command('ribbon.create', {ribbonId: id, objectIds: ribbonSchema.shape.objectIds, closed: z.boolean(), color: sprayColorSchema}),
+  'ribbon.delete': command('ribbon.delete', {ribbonId: id}),
   'scene.undo': command('scene.undo', {expectedSceneRevision: counter}),
   'scene.redo': command('scene.redo', {expectedSceneRevision: counter}),
   'sync.request': command('sync.request', {afterServerSeq: counter}),
@@ -210,7 +258,9 @@ export const outboundSchemas = {
   'sync.required': out('sync.required', {reason: z.enum(['GAP','NEW_EPOCH','WINDOW_EXCEEDED'])}),
   'room.closed': out('room.closed', {reason: z.enum(['CLOSED','EXPIRED'])}),
   'tray.changed': out('tray.changed', {trayId: trayIdSchema, trayRevision: counter, sceneRevision: counter, operationId: id,
-    stroke: z.strictObject({tool: sandToolSchema, points: z.array(cellPoint).min(1).max(8)}).optional(), waterLevel: z.number().min(0).max(1)}),
+    stroke: z.strictObject({tool: sandToolSchema, points: z.array(cellPoint).min(1).max(8)}).optional(),
+    spray: z.strictObject({color: sprayColorSchema, points: z.array(cellPoint).min(1).max(8)}).optional(), wash: z.literal(true).optional(),
+    waterLevel: z.number().min(0).max(1)}),
 };
 export function parseInbound(raw: string) {
   if (new TextEncoder().encode(raw).length > 16384) throw new Error('INVALID_PAYLOAD');

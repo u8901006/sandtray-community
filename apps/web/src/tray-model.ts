@@ -1,14 +1,22 @@
 import {base64ToBytes,surfaceU8,type Heightmap,type BrushTool} from '../../../packages/sand-engine/src/core';
-import {createTrayHeightmap,strokeTray,quantizeWater} from '../../../packages/sand-engine/src/tray';
-import {CM_PER_UNIT,STANDARD_TRAY_CONFIG,trayConfigSchema,clampToTray,type TrayId,type TrayConfig} from '../../../packages/protocol/src/index';
+import {createTrayHeightmap,quantizeWater} from '../../../packages/sand-engine/src/tray';
+import {createPaint,sprayTray,strokeTrayPainted,hasPaint} from '../../../packages/sand-engine/src/paint';
+import {CM_PER_UNIT,STANDARD_TRAY_CONFIG,SPRAY_COLORS,trayConfigSchema,clampToTray,type TrayId,type TrayConfig} from '../../../packages/protocol/src/index';
 export {CM_PER_UNIT};
                                                                                                                                
                                                                                                                               
                                                                                                    
                                                                                                                                   
 export type Point=[number,number];
-export interface TrayChanged {trayId:TrayId;trayRevision:number;operationId:string;stroke?:{tool:BrushTool;points:Point[]};waterLevel:number}
-export interface SnapshotTray {id:string;shape?:string;sizeCm?:{w:number;h:number;depth:number};heightmap:{w:number;h:number;data:string};waterLevel:number;revision?:number}
+                                                                                                                                    
+export interface TrayChanged {trayId:TrayId;trayRevision:number;operationId:string;stroke?:{tool:BrushTool;points:Point[]};spray?:{color:number;points:Point[]};wash?:true;waterLevel:number}
+export interface SnapshotTray {id:string;shape?:string;sizeCm?:{w:number;h:number;depth:number};heightmap:{w:number;h:number;data:string};paint?:{w:number;h:number;data:string};waterLevel:number;revision?:number}
+                                                                                  
+export type TrayStrokeTool=BrushTool|'spray';
+type PendingStroke={id:string;tool:TrayStrokeTool;color?:number;points:Point[]};
+function applyStroke(hm:Heightmap,paint:Uint8Array,stroke:{tool:TrayStrokeTool;color?:number},points:readonly Point[]){
+ if(stroke.tool==='spray')sprayTray(hm,paint,stroke.color!,points);else strokeTrayPainted(hm,paint,stroke.tool,points);
+}
                                                                                                         
 export function traySize(config:TrayConfig){return {x:config.w/CM_PER_UNIT,z:config.h/CM_PER_UNIT,depth:config.depth/CM_PER_UNIT};}
                                                                              
@@ -153,34 +161,41 @@ export function surfaceY(hm:Heightmap,x:number,z:number){
 const SLIVER=.015/CM_PER_UNIT;
 const sameConfig=(a:TrayConfig,b:TrayConfig)=>a.shape===b.shape&&a.w===b.w&&a.h===b.h&&a.depth===b.depth;
 export class TrayModel {
- config:TrayConfig;confirmed:Heightmap;display:Heightmap;revision=0;water=0;version=0;
- pending:{id:string;tool:BrushTool;points:Point[]}[]=[];
+ config:TrayConfig;confirmed:Heightmap;display:Heightmap;confirmedPaint:Uint8Array;displayPaint:Uint8Array;revision=0;water=0;version=0;
+ pending:PendingStroke[]=[];
  private listeners=new Set<()=>void>();
  private rippleListeners=new Set<(x:number,z:number,strength:number)=>void>();
- constructor(readonly id:TrayId,config:TrayConfig=STANDARD_TRAY_CONFIG){this.config=config;this.confirmed=createTrayHeightmap(config);this.display=createTrayHeightmap(config);}
+ constructor(readonly id:TrayId,config:TrayConfig=STANDARD_TRAY_CONFIG){this.config=config;this.confirmed=createTrayHeightmap(config);this.display=createTrayHeightmap(config);this.confirmedPaint=createPaint(this.confirmed);this.displayPaint=createPaint(this.display);}
  subscribe(listener:()=>void){this.listeners.add(listener);return()=>{this.listeners.delete(listener);};}
  private changed(){this.version++;for(const listener of this.listeners)listener();}
                                                                                                                        
  onRipple(listener:(x:number,z:number,strength:number)=>void){this.rippleListeners.add(listener);return()=>{this.rippleListeners.delete(listener);};}
  ripple(x:number,z:number,strength=1){for(const listener of this.rippleListeners)listener(x,z,strength);}
  private rippleAt([i,j]:Point){const size=traySize(this.config);this.ripple(((i+.5)/this.confirmed.w-.5)*size.x,((j+.5)/this.confirmed.h-.5)*size.z,.6);}
- private rebuild(){this.display.data.set(this.confirmed.data);for(const p of this.pending)strokeTray(this.display,p.tool,p.points);this.changed();}
+ private rebuild(){this.display.data.set(this.confirmed.data);this.displayPaint.set(this.confirmedPaint);for(const p of this.pending)applyStroke(this.display,this.displayPaint,p,p.points);this.changed();}
+                                                                                            
+ get painted(){return hasPaint(this.confirmedPaint);}
                                                                                                                                         
  configure(config:TrayConfig){
   if(sameConfig(config,this.config))return false;
-  this.config=config;this.confirmed=createTrayHeightmap(config);this.display=createTrayHeightmap(config);this.revision=0;this.water=0;this.pending=[];this.changed();return true;
+  this.config=config;this.confirmed=createTrayHeightmap(config);this.display=createTrayHeightmap(config);this.confirmedPaint=createPaint(this.confirmed);this.displayPaint=createPaint(this.display);this.revision=0;this.water=0;this.pending=[];this.changed();return true;
  }
                                                                                          
  adopt(tray:SnapshotTray){
   if(tray.shape&&tray.sizeCm){const parsed=trayConfigSchema.safeParse({shape:tray.shape,...tray.sizeCm});if(!parsed.success)throw new Error('TRAY_SHAPE_UNSUPPORTED');this.configure(parsed.data);}
   const revision=tray.revision??0;if(revision<this.revision)return;
   const data=base64ToBytes(tray.heightmap.data);if(tray.heightmap.w!==this.confirmed.w||tray.heightmap.h!==this.confirmed.h||data.length!==this.confirmed.data.length)throw new Error('TRAY_SHAPE_UNSUPPORTED');
+                                                                                                                
+  const paint=tray.paint?base64ToBytes(tray.paint.data):undefined;if(paint&&(tray.paint!.w!==this.confirmed.w||tray.paint!.h!==this.confirmed.h||paint.length!==this.confirmedPaint.length))throw new Error('TRAY_SHAPE_UNSUPPORTED');
+  this.confirmedPaint.fill(0);if(paint)for(let k=0;k<paint.length;k++)this.confirmedPaint[k]=paint[k]<=SPRAY_COLORS.length?paint[k]:0;
   this.confirmed.data.set(data);this.revision=revision;this.water=tray.waterLevel;this.rebuild();
  }
                                                                                                     
  replay(event:TrayChanged){
   if(event.trayRevision<=this.revision)return true;if(event.trayRevision!==this.revision+1)return false;
-  if(event.stroke){strokeTray(this.confirmed,event.stroke.tool,event.stroke.points);
+  if(event.spray)sprayTray(this.confirmed,this.confirmedPaint,event.spray.color,event.spray.points);
+  if(event.wash)this.confirmedPaint.fill(0);
+  if(event.stroke){strokeTrayPainted(this.confirmed,this.confirmedPaint,event.stroke.tool,event.stroke.points);
                                                                                                          
    if(!this.pending.some(p=>p.id===event.operationId))this.rippleAt(event.stroke.points[event.stroke.points.length-1]);}
   this.water=event.waterLevel;this.revision=event.trayRevision;
@@ -189,14 +204,21 @@ export class TrayModel {
                                                                                       
  stroke(id:string,tool:BrushTool,point:Point){
   let open=this.pending.at(-1);if(!open||open.id!==id){open={id,tool,points:[]};this.pending.push(open);}
-  open.points.push(point);strokeTray(this.display,tool,[point]);this.rippleAt(point);this.changed();
+  open.points.push(point);strokeTrayPainted(this.display,this.displayPaint,tool,[point]);this.rippleAt(point);this.changed();
+ }
+                                                                                                                                             
+ spray(id:string,color:number,point:Point){
+  let open=this.pending.at(-1);if(!open||open.id!==id){open={id,tool:'spray',color,points:[]};this.pending.push(open);}
+  open.points.push(point);sprayTray(this.display,this.displayPaint,color,[point]);this.changed();
  }
  drop(id:string){const before=this.pending.length;this.pending=this.pending.filter(p=>p.id!==id);if(this.pending.length!==before)this.rebuild();}
                                                                  
- applyLocal(tool:BrushTool,point:Point){strokeTray(this.confirmed,tool,[point]);strokeTray(this.display,tool,[point]);this.rippleAt(point);this.changed();}
+ applyLocal(tool:BrushTool,point:Point){strokeTrayPainted(this.confirmed,this.confirmedPaint,tool,[point]);strokeTrayPainted(this.display,this.displayPaint,tool,[point]);this.rippleAt(point);this.changed();}
+ applyLocalSpray(color:number,point:Point){sprayTray(this.confirmed,this.confirmedPaint,color,[point]);sprayTray(this.display,this.displayPaint,color,[point]);this.changed();}
+ washLocal(){this.confirmedPaint.fill(0);this.rebuild();}
  setLocalWater(level:number){this.water=quantizeWater(level);this.changed();}
                                                                          
- restoreLocal(data:Uint8Array,water:number){this.confirmed.data.set(data);this.water=water;this.rebuild();}
+ restoreLocal(data:Uint8Array,water:number,paint?:Uint8Array){this.confirmed.data.set(data);if(paint)this.confirmedPaint.set(paint);this.water=water;this.rebuild();}
                                                                                                                                   
  clearPending(){if(this.pending.length){this.pending=[];this.rebuild();}}
 }

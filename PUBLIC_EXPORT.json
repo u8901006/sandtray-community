@@ -1,7 +1,7 @@
 {
   "format": 1,
-  "sourceCommit": "a6e097a7ef7b00d7609f0b59f7f955035aa78553",
-  "profileSha256": "417a18da53d039cd21555ba1ed0b3bc6b1554e789103eac479ada5a0c72e0983",
+  "sourceCommit": "4d35ad1fcfc6568eee7bb697ba54c945e0fc464d",
+  "profileSha256": "b384b52b186775f11d2059f5f2305243b7230b4747308d70b0e1203b0825643d",
   "license": "AGPL-3.0-only",
   "assets": [
     {
@@ -2291,6 +2291,46 @@
       "sha256": "332a4a8ae742b8e752ca1ae0acb77d16a92ddf21e3642c4296c04945560045f3",
       "bytes": 226932,
       "sourcePack": "Quaternius Stylized Nature MegaKit"
+    },
+    {
+      "id": "CLT_SQUARE_CLOTH",
+      "url": "/imported-assets/cloth-v1/CLT_SQUARE_CLOTH-4de654423e24ef93.glb",
+      "thumbnail": "/imported-assets/cloth-v1/CLT_SQUARE_CLOTH.png",
+      "sha256": "4de654423e24ef936f01cacb7681b777573e650298c2b2dbd6f384dd3d9bf699",
+      "bytes": 75776,
+      "sourcePack": "本專案程序化建模"
+    },
+    {
+      "id": "CLT_LONG_CLOTH",
+      "url": "/imported-assets/cloth-v1/CLT_LONG_CLOTH-7d24fbb1940e9cdb.glb",
+      "thumbnail": "/imported-assets/cloth-v1/CLT_LONG_CLOTH.png",
+      "sha256": "7d24fbb1940e9cdb78d586ec69236fdce27fdfe62ee7a839d3128c33f4024a3d",
+      "bytes": 106720,
+      "sourcePack": "本專案程序化建模"
+    },
+    {
+      "id": "TUN_ARCH_SHORT",
+      "url": "/imported-assets/tunnel-v1/TUN_ARCH_SHORT-be2b9f9b5c9d376e.glb",
+      "thumbnail": "/imported-assets/tunnel-v1/TUN_ARCH_SHORT.png",
+      "sha256": "be2b9f9b5c9d376ec152a9305ce0693b99414d3fc248609a909b8e1b885a25ae",
+      "bytes": 48440,
+      "sourcePack": "本專案程序化建模"
+    },
+    {
+      "id": "TUN_TUNNEL_LONG",
+      "url": "/imported-assets/tunnel-v1/TUN_TUNNEL_LONG-9ee1f73cae621094.glb",
+      "thumbnail": "/imported-assets/tunnel-v1/TUN_TUNNEL_LONG.png",
+      "sha256": "9ee1f73cae621094d408e2de70c2ea341a5c3874461166b1fb2251b10c3e53c9",
+      "bytes": 22032,
+      "sourcePack": "本專案程序化建模"
+    },
+    {
+      "id": "TUN_PLAY_TUNNEL",
+      "url": "/imported-assets/tunnel-v1/TUN_PLAY_TUNNEL-51cbd64080c31547.glb",
+      "thumbnail": "/imported-assets/tunnel-v1/TUN_PLAY_TUNNEL.png",
+      "sha256": "51cbd64080c315472b5fcbcc9bc81e6a3cd5a6aaa2d40e9cb884e16cb7b481d8",
+      "bytes": 221340,
+      "sourcePack": "本專案程序化建模"
     }
   ],
   "files": [
@@ -2322,67 +2362,67 @@
       "path": ".npmrc",
       "bytes": 69,
       "sha256": "f1262fd0a5247e31ac63c01cd886ad5443162e05d53c87ed0219c0a9e5f682fd",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": ".nvmrc",
       "bytes": 8,
       "sha256": "a0e27aeeac42d6102f4ff2bce40d8fb011c07e5cb28eff3c9d77e68df29e5dd6",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/web/index.html",
       "bytes": 306,
       "sha256": "9f716561557aa2563a5ddae431609afee287e070d724733cf9a63c5cea83e27f",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/web/package.json",
       "bytes": 73,
       "sha256": "f169a07fdb0a6360463551f9ba111f031caefd8745f53a49714c90c5c6b4b4ef",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/web/public/_headers",
       "bytes": 270,
       "sha256": "0daa91be0bf28784e53fca17c3f1839b8f018de021d54b2feb00943321896e49",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/web/public/.assetsignore",
       "bytes": 231,
       "sha256": "12bc69121ab5b3eabd49ab95769702cdcdb5bb40c260bae542b556f5460c7cb4",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/web/public/dev-assets/arch.glb",
       "bytes": 4356,
       "sha256": "7305839eb9b00d3fd1b82239c1cbfadf90014562968d642741f8faeedb27f4d8",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/web/public/dev-assets/house.glb",
       "bytes": 2744,
       "sha256": "25840cc2266deb55b5ce72bb48a0d9fb75c7b2f4d7dc517061303473d438b1c2",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/web/public/dev-assets/puppet-v1.glb",
       "bytes": 3572,
       "sha256": "c26836d696c0cf2063f77a62d4de89b3a23c512fd2cdc128c66726bb53c84c53",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/web/public/dev-assets/puppet-v2.glb",
       "bytes": 4064,
       "sha256": "5b043c52fb0c730b81cd7f9663509844008295e8b499c54dd71678a3b1ee92ac",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/web/public/dev-assets/rock.glb",
       "bytes": 6556,
       "sha256": "303198b9d61088870c498f0be405979f32cabdfe6663e932dae1f19804806b4d",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/web/public/environments/garden-v3/garden-ambience.wav",
@@ -2419,6 +2459,30 @@
       "bytes": 34093,
       "sha256": "cdfa286b6d6a759c6b45c145a3e3e901d742674d077fdb00b930d569d5f6bc90",
       "origin": "pinned-garden-input"
+    },
+    {
+      "path": "apps/web/public/imported-assets/cloth-v1/CLT_LONG_CLOTH-7d24fbb1940e9cdb.glb",
+      "bytes": 106720,
+      "sha256": "7d24fbb1940e9cdb78d586ec69236fdce27fdfe62ee7a839d3128c33f4024a3d",
+      "origin": "pinned-public-asset"
+    },
+    {
+      "path": "apps/web/public/imported-assets/cloth-v1/CLT_LONG_CLOTH.png",
+      "bytes": 50198,
+      "sha256": "59352555bb00da5a2d08ab8f995e72ae858655636c418fc7a0274b52761376d6",
+      "origin": "pinned-public-asset"
+    },
+    {
+      "path": "apps/web/public/imported-assets/cloth-v1/CLT_SQUARE_CLOTH-4de654423e24ef93.glb",
+      "bytes": 75776,
+      "sha256": "4de654423e24ef936f01cacb7681b777573e650298c2b2dbd6f384dd3d9bf699",
+      "origin": "pinned-public-asset"
+    },
+    {
+      "path": "apps/web/public/imported-assets/cloth-v1/CLT_SQUARE_CLOTH.png",
+      "bytes": 55190,
+      "sha256": "27d8c3716791460b556c2b8b2c13546f8cbffc1a5e58d3ea0c9440d12db340e8",
+      "origin": "pinned-public-asset"
     },
     {
       "path": "apps/web/public/imported-assets/megakits-v1/MK_SN_Bush_Common_Flowers-86ecf88c969e34bd.glb",
@@ -2617,6 +2681,42 @@
       "bytes": 852,
       "sha256": "120710e542c3ebaf83856c4eb55b4a1e680593b39302eba7fdc5d942dfe78c58",
       "origin": "CC0-license-snapshot"
+    },
+    {
+      "path": "apps/web/public/imported-assets/tunnel-v1/TUN_ARCH_SHORT-be2b9f9b5c9d376e.glb",
+      "bytes": 48440,
+      "sha256": "be2b9f9b5c9d376ec152a9305ce0693b99414d3fc248609a909b8e1b885a25ae",
+      "origin": "pinned-public-asset"
+    },
+    {
+      "path": "apps/web/public/imported-assets/tunnel-v1/TUN_ARCH_SHORT.png",
+      "bytes": 19437,
+      "sha256": "f12b24ff4db683c8a2a19f2e467f55088abd847e1774227dad8bf89ad23e1737",
+      "origin": "pinned-public-asset"
+    },
+    {
+      "path": "apps/web/public/imported-assets/tunnel-v1/TUN_PLAY_TUNNEL-51cbd64080c31547.glb",
+      "bytes": 221340,
+      "sha256": "51cbd64080c315472b5fcbcc9bc81e6a3cd5a6aaa2d40e9cb884e16cb7b481d8",
+      "origin": "pinned-public-asset"
+    },
+    {
+      "path": "apps/web/public/imported-assets/tunnel-v1/TUN_PLAY_TUNNEL.png",
+      "bytes": 107834,
+      "sha256": "cecc2b4622ffcfcf2a07343b9602ff75b8a36921ae052cdf9b74efd99dfad37d",
+      "origin": "pinned-public-asset"
+    },
+    {
+      "path": "apps/web/public/imported-assets/tunnel-v1/TUN_TUNNEL_LONG-9ee1f73cae621094.glb",
+      "bytes": 22032,
+      "sha256": "9ee1f73cae621094d408e2de70c2ea341a5c3874461166b1fb2251b10c3e53c9",
+      "origin": "pinned-public-asset"
+    },
+    {
+      "path": "apps/web/public/imported-assets/tunnel-v1/TUN_TUNNEL_LONG.png",
+      "bytes": 35951,
+      "sha256": "83f54172b1c0e95adbe10ef378eb385479c4f58a1a8ed2b007e9a87cf53a2b7a",
+      "origin": "pinned-public-asset"
     },
     {
       "path": "apps/web/public/imported-assets/v1/ARENA-LICENSE.txt",
@@ -5898,517 +5998,571 @@
       "path": "apps/web/src/admin-panel.css",
       "bytes": 3268,
       "sha256": "44e95ee17d82e3d009a35da1adb2c54cab8077b06e8a8d43a295cc86f4f34963",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/web/src/admin-panel.tsx",
       "bytes": 7480,
       "sha256": "65ee6810fc56a1a91a06a5a4778ef4718f10c6389e0824faa3be2121f9f4ea3a",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/web/src/asset-listing.ts",
       "bytes": 1044,
       "sha256": "585089b8c1407951ed2801f4fd675fa2cd3ea34d818431a7e5179a1a3433c3f1",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/web/src/asset-pool.ts",
       "bytes": 2928,
       "sha256": "1e65a5e3af86e1f6c71c3c97c53c85d014d0d885bc7da0314f54d3593ce3932c",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/web/src/bury.ts",
       "bytes": 1695,
       "sha256": "a050bdcc7915f22fafc9d56e0f1ce2707dc21c5315d7067e5eca60fc8b5bcdfd",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/web/src/canvas-lifecycle.tsx",
       "bytes": 658,
       "sha256": "5d92e640108886bacc50641bf207d04012ed12d4c1b6e208d4f67da7122616e0",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/web/src/catalog-model.tsx",
       "bytes": 6047,
       "sha256": "f467f170c9efbc2a82dbe586b84fd60e3c91c4f153e88a9517b04eccc93fa40e",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
+    },
+    {
+      "path": "apps/web/src/cloth.ts",
+      "bytes": 3803,
+      "sha256": "a1175cd236d55c802b0c381234e9318aa1c5463376e002c26cb50e9c43c734d5",
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
+    },
+    {
+      "path": "apps/web/src/companion-view.tsx",
+      "bytes": 9739,
+      "sha256": "54b9f7cf0809f368f9ed4a26adaaf4050753fc4df7780f43c963aff4537c3613",
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
+    },
+    {
+      "path": "apps/web/src/companion.ts",
+      "bytes": 3753,
+      "sha256": "10f6783870f1fc352f946ade85e93c426264c6f80c72891942a16b90086983e8",
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/web/src/credits.tsx",
       "bytes": 3274,
       "sha256": "d69ced2c51c361e8c42eb6bb28f1634751c958b6b3e22b58840838401e90f024",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/web/src/data-management.css",
       "bytes": 2197,
       "sha256": "02b7ade7a75af245596ea2810a034006b3364711cf35c192997c341e7f69dee7",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/web/src/entry-decision.ts",
       "bytes": 2292,
       "sha256": "6c9c1dddc95344740f0362ebcc42b5e17ed1a0d307a8fbcf8404185ea317eba0",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/web/src/entry-gate.css",
       "bytes": 4819,
       "sha256": "0d3222245d51a6777e5ef55311f736d507545d756dcb5ca8b4d5224927ac6006",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/web/src/entry-gate.tsx",
       "bytes": 6536,
       "sha256": "6ace46182a9450a4e98a247066988a39852cb49a8d7dcc956101a2cd6b716329",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/web/src/garden-audio.ts",
       "bytes": 1495,
       "sha256": "3eb270e9ec6d4937b60dac780964dbee60857e458d0c46382247a801b3a434c7",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/web/src/garden-bridge-details.tsx",
       "bytes": 8161,
       "sha256": "25b2aa18bdfb755e91a877254ccd1a3c953bf72afe2115232ba848271bf07532",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/web/src/garden-colliders-v2.json",
       "bytes": 34093,
       "sha256": "cdfa286b6d6a759c6b45c145a3e3e901d742674d077fdb00b930d569d5f6bc90",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/web/src/garden-environment.ts",
       "bytes": 2111,
       "sha256": "2cdd17d6abdd1d5d7ca47c84bd0d4b1f3222961e6b609074870176115668cb11",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/web/src/garden-experience.tsx",
       "bytes": 18835,
       "sha256": "e8a93ef5fb31454c6f415432c6c60e6336fd118bc1d8b088d70c1f49fb94cf3f",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/web/src/garden-extras.tsx",
       "bytes": 13540,
       "sha256": "0720e56ab7aebbcbf75f66b139abd1345b2f9fbba4f664be1b4b565b4472ef81",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/web/src/garden-ground.ts",
       "bytes": 6341,
       "sha256": "47af9538b6fe228cd2f4bae84276e7ac4ad1dee33ecec788e70845f58d6444c1",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/web/src/garden-landmarks.tsx",
       "bytes": 12883,
       "sha256": "73d0115400465d18e51e72c53d4889c99045a0033e310efb6932ae79db015a50",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/web/src/garden-layout.ts",
       "bytes": 14264,
       "sha256": "64fe5671187aa120468561fb5b2dfd0aba047511cc0090e7e813f7f05250ce4d",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/web/src/garden-materials.ts",
       "bytes": 4059,
       "sha256": "8b799e25877fda3d39f16e0bc9ff01e1a87c34036d4707597260a642a4128337",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/web/src/garden-navigation.ts",
       "bytes": 3256,
       "sha256": "30b62ef513a1f3541a7edfbefc7edbd53441d996f132ca8d7cf2bb0f2bbb2392",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/web/src/garden-pond-life.tsx",
       "bytes": 13478,
       "sha256": "e4c3c85fb8207e6c8e2daa766c9c30731c31a1046b0cc406e5708a5b413d0d5e",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/web/src/garden-preferences.ts",
       "bytes": 2193,
       "sha256": "2e9a84abbc98dfc3fd6b680bf30c40c1e2232a0dead5b69ff2e31e2fe1ed9dff",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/web/src/garden-reflection.ts",
       "bytes": 3300,
       "sha256": "3fd75323bc6074bb83ea09bd4ce70967bfbff811208cf3cd4f3392a5ea745c8f",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/web/src/garden-shaders.ts",
       "bytes": 21503,
       "sha256": "86ae64af6228b94dccbfb435403ca50a33032afb933517adddc387318e40808e",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/web/src/garden-sky.tsx",
       "bytes": 3253,
       "sha256": "64c161e8b50d3f0c2c9fdf118d3ba4e3774cb18c3efe9dafdb4437cbdd87876b",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/web/src/garden-surfaces.ts",
       "bytes": 5028,
       "sha256": "249b43ab0c18ee8ebadf9a374a753ac56ab6b9367a15df3ec889195e08c6e507",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/web/src/garden-vegetation.tsx",
       "bytes": 17410,
       "sha256": "4c424024eeb6dd113fafb77567cf839bfc4eda12db8deb26ff8066d3a71dfd60",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/web/src/garden-water.tsx",
       "bytes": 663,
       "sha256": "13451fc249aa03814340800aa82011500832f35cf716da788f60efdd8cb39c62",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/web/src/garden.css",
       "bytes": 1972,
       "sha256": "c06590d11182d25d14be74d0279cc2f71a838d205fe9bd3ab363aeb801e6ef2c",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/web/src/help-cards.ts",
       "bytes": 1929,
       "sha256": "eac2ecb7ce5045ad333ad4381d47ab8fe515aed310bb0200538a6e25e06ec113",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/web/src/look-at-object.ts",
       "bytes": 1484,
       "sha256": "b467b4d4fcdf21ee95bdc3fa0eb32254173a8d18c13b560077fee4cfdef28a01",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/web/src/main.tsx",
-      "bytes": 75675,
-      "sha256": "dc91bc53f4f1a1f0e2850a0ed311b13a5ba96bdad008c280db75ac343cec5e64",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "bytes": 90422,
+      "sha256": "d0365cbd4b8a93f52a9fb7362339180b780bb51cb27d69621d061dba6fe8cbbf",
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/web/src/model-size.ts",
       "bytes": 2388,
       "sha256": "5334df0e672609f4a52cc0324a597678ac461dc8939d25d67e177e25f5772614",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/web/src/object-mark.tsx",
       "bytes": 703,
       "sha256": "73fbbdb0ece5995e8d7a853058eb6e0cea6d79661d060fc72a3024601b465a0f",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/web/src/png-export.tsx",
       "bytes": 3158,
       "sha256": "356f60d8894491cdeb32c1b3f7568a9a63943d41fbe90cefde88aae660c7e491",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/web/src/presence.ts",
       "bytes": 2443,
       "sha256": "cf8374e04ed2653910cd19ed83b71451dbb977d60e347a7c6d6953e9d7e5be56",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/web/src/quick-tools-placement.ts",
       "bytes": 1688,
       "sha256": "2e7134b910697a341011e9bdf6c5946fd1e94cc8015ad266f3397901a639d2ac",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/web/src/receipt-retry.ts",
       "bytes": 1192,
       "sha256": "584826ac467be1f7b491119aebf67146605b086f6799556f774bbd5890f12e58",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/web/src/reconnect-policy.ts",
       "bytes": 932,
       "sha256": "cefb60728b5c119d87aa38275036c1e525a6f08c674f720f103cb396eb4cd0cd",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/web/src/remote-motion.ts",
       "bytes": 4055,
       "sha256": "1ad3896c4616027e074191b1ea69b7be87c7712b4723275f281abef5971a96b5",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/web/src/request-label.ts",
       "bytes": 1551,
       "sha256": "f416fc6410efdee47dea8007b33b919c18d14170f22382c06eb0741df294d192",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
+    },
+    {
+      "path": "apps/web/src/ribbon-view.tsx",
+      "bytes": 4754,
+      "sha256": "b21bc8b68e405571b5e4d2bad666f2eb3e2b6e8b47728fd1cab56f0aef5e5900",
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
+    },
+    {
+      "path": "apps/web/src/ribbon.ts",
+      "bytes": 7109,
+      "sha256": "f1e11bd8edb671acf74cbcc8bce89ede08f46f7229f5917930df02219ce79c96",
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/web/src/room-lighting.tsx",
       "bytes": 10500,
       "sha256": "586e86789badac06ac5a40184cbcf8599900e7eab67b5f77a297d53b205d07c0",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/web/src/room-moods.ts",
       "bytes": 4632,
       "sha256": "a8d763c79a4d16ddca5f3d054d9e626bfbe0affe7ec902f5d1d5c5b3793ae5af",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/web/src/sandtray-surface.tsx",
-      "bytes": 23757,
-      "sha256": "af7c2215d06ce8c4d83d39e4dc1495bef979db735d1217b8e7da945ec03c0dd0",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "bytes": 25522,
+      "sha256": "61a2cbcb16b8aa7a8c1475741401516c9e7b1f88d92ffebb3fe1f0022ae40581",
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/web/src/session-tools.tsx",
-      "bytes": 12908,
-      "sha256": "a823befee851ebcd274183395225bcc6b8ce4b963248b4bb986a0f52be025d22",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "bytes": 13632,
+      "sha256": "2406cdf5bfe9dc45fc2a8388e07677bab71c48d6acaa2ff397022ab4fa0b18fb",
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/web/src/shared-room.ts",
       "bytes": 23391,
       "sha256": "0deac0dd5305b676f7a9e0d646ae5c24d00a1861f73f37b491afa0a94e6d0b17",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/web/src/shelf-groups.ts",
-      "bytes": 2707,
-      "sha256": "58e8f24df12bca4952693cfd20c575a6e0e08eabf6c04d0344ff13d0793ca59c",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "bytes": 2713,
+      "sha256": "fdc43f7bc45832decc7b9f987d38470164f78f14711785a8728b53affc3c8c6c",
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/web/src/shelf-memory.ts",
       "bytes": 1332,
       "sha256": "c9ed8ce00199b541e71c479ef0af083d1f6471343383cbb2fb3900a52f7bee7e",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/web/src/status-chip.tsx",
       "bytes": 366,
       "sha256": "d25636e6d4a7587b1d2bd954ed80785e5752d9d1ceb2e7d192010f453a64294c",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/web/src/status-tone.ts",
       "bytes": 1412,
       "sha256": "4e01a64e9ffcbc415446782e319f2a48f7db9a8bb69d93fd1b54c028b3bda1b0",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/web/src/style.css",
-      "bytes": 26913,
-      "sha256": "19ea35cf282702c94abd26856cc46bc99016246edb275b35995cd71394ed36cd",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "bytes": 34791,
+      "sha256": "024c8ac463b9d0f1829c1cbe10719e56b35d065a1e095683d05c10541ca42071",
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/web/src/stylized-shader.ts",
       "bytes": 4835,
       "sha256": "d9dea253fedd05e42cdcd2cd9fbdc3a32f3bbffd2593dd1739b271a6a062c8f0",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
+    },
+    {
+      "path": "apps/web/src/telescope.ts",
+      "bytes": 2056,
+      "sha256": "190f7f89b7ff3508a5873f3464be928a27434af5c887baf10694077f14a50667",
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/web/src/tray-layout.ts",
       "bytes": 2492,
       "sha256": "9c03bc5ee9789bd76a5e94f731afe6670a3501a8cfd6f89bac543b340024966b",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/web/src/tray-model.ts",
-      "bytes": 18817,
-      "sha256": "8a4a4419e66618e1dc8d38ab50404507ed5bd8705320079a219b90d3c566efdf",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "bytes": 21435,
+      "sha256": "b824d22b51b5792eea6004e357b5851fdeb4f4fc433f03e8d667b6f932ad740d",
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/web/src/tray-setup.tsx",
       "bytes": 3458,
       "sha256": "319cf8934c73d6153e48271806ad62c9226609fabdfe822a9031cf334d327475",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/web/src/tray-textures.ts",
       "bytes": 3152,
       "sha256": "a484bb2565cce272afaec988732467c2cce3f622315b3af8ea08dd0ad4e75e60",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
+    },
+    {
+      "path": "apps/web/src/tunnel-view.tsx",
+      "bytes": 2913,
+      "sha256": "328b315e5fcd0de05c1fe36a28f9ba33ed9cf01c927bfde37e2276527382360a",
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
+    },
+    {
+      "path": "apps/web/src/tunnel.ts",
+      "bytes": 2475,
+      "sha256": "21905a8d1e9e3c2fca5c598266253cfb42470e7f5959f8989a6a8360545d2b1c",
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/web/src/ui-icons.tsx",
-      "bytes": 2472,
-      "sha256": "5f9b34a1da1826fd70cdffd3c16779fcde80e2acee381e13646e8aafde46f4cb",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "bytes": 3366,
+      "sha256": "ea29062f81469c45610a26ecb4e89c233a3a1b00e243d8d4c791b3007d691dbf",
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/web/vite.config.ts",
       "bytes": 275,
       "sha256": "0a96e713417c4b4297377923fa71d2f32eb252b2da3fc90191d4c9d880ba1e75",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/worker/asset-bindings.d.ts",
       "bytes": 922,
       "sha256": "0a5f553f9047e05a4a51e4051416680af068260a0de06b5eb3046db17e76d755",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/worker/migrations/0001_directory.sql",
       "bytes": 643,
       "sha256": "cce41942543fdda98d5764999013ba84dbd53aab0310a998a4dd0c8194bdf02a",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/worker/migrations/0002_versions.sql",
       "bytes": 338,
       "sha256": "cec6c15447a144c9ac2c0cae10fac0e53a80c825ff80e71f95c1108a9b5bade7",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/worker/migrations/0003_archive.sql",
       "bytes": 408,
       "sha256": "b1aae2e94297f42a4268c0d9c64d8e63e882f2a6a53d05fb80cc5f9be14c5fec",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/worker/migrations/0004_archive_generation.sql",
       "bytes": 76,
       "sha256": "efbf33bf5d69806d0215be2d8b8c6803d0ac8fe76ee5c23092268228cc3f0b1e",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/worker/migrations/0005_data_management.sql",
       "bytes": 337,
       "sha256": "29d1e1769f2e7b07e95fd8f5b623c5f308aacd42ace4b9428f804abf2119fffa",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/worker/migrations/0006_admin_enrollment.sql",
       "bytes": 1014,
       "sha256": "f7daca8dd63a3a7b742224e093194785ebb0f2ef1fdc164d9b80875221423505",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/worker/package.json",
       "bytes": 77,
       "sha256": "635f081bff75267343acd4b33be6d7f98cc0d523a55abd43f23b8ac402a13b3c",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/worker/src/admin.ts",
       "bytes": 11892,
       "sha256": "91ccdba2246629c0a872630c6f19342f7d0971ea3489dc1b9052a5053ae8c78d",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/worker/src/asset-delivery.ts",
       "bytes": 3978,
       "sha256": "b4de7fe612ae5f3cbefa4cb4e9ed0bc68a20a159432c6ab1b71f253b2ebf6092",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/worker/src/auth.ts",
       "bytes": 7857,
       "sha256": "1520cd029c91f04bd3e5230c52fb96d13147a3179ce31bfae8a9a52e4945a2c3",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/worker/src/coordinator.ts",
       "bytes": 15274,
       "sha256": "96549ba77643c7625a60dd30215f80dcd879fac6f023a618c4e2b67599e0da76",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/worker/src/env.ts",
       "bytes": 1133,
       "sha256": "e6e0c0b3e50211622290567ea94a7e78d8a205024d04c78aaa654c1a5fbb952b",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/worker/src/http.ts",
       "bytes": 2097,
       "sha256": "a76b832fc74cd4f0c56033bad24a252f36a902de6e4b2d4656d03866c691c3c1",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/worker/src/index.ts",
       "bytes": 12883,
       "sha256": "01894637265e936362864cd44cbce1d8525b0ff09b444cad3de4d43c408e5f83",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/worker/src/oidc-verify.ts",
       "bytes": 678,
       "sha256": "b5d5e248603021b54274d9d90e810abab9772d340e4b46af0688eb0bafb40198",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/worker/src/peer-online.ts",
       "bytes": 509,
       "sha256": "eb75d2b13aed478cc9e04a7209344a5ac5c69f576fbedb434415520863194a3a",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/worker/src/policy.ts",
       "bytes": 1942,
       "sha256": "f002fb1bacd0ad7caab8c5c9799de02344f5e2d35a6fffb3e1fa2b9dd931aac7",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
+    },
+    {
+      "path": "apps/worker/src/ribbons.ts",
+      "bytes": 1670,
+      "sha256": "d29e25f72712168506a3cdb586aa43a0f672f922c746e81dc2a8dfe8201e5d9a",
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/worker/src/room.ts",
-      "bytes": 11013,
-      "sha256": "c00b2fadfdbc60becf734e84c00550d001b4b9542557b676685b3823960e9da9",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "bytes": 11423,
+      "sha256": "5f8bbedcee3e886678b66c748d2ad923f966a3c504916bb5ffb966a07ea74b83",
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/worker/src/sessions.ts",
       "bytes": 15621,
       "sha256": "e2a13943cc8422a8b05cce3237af354adc3a9c82e4654d054ed41f7e9c7d410e",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/worker/src/static-gate.ts",
       "bytes": 2145,
       "sha256": "9918e3fb841e7280c0f378ef2ba954134cb89020d5617acf6ad285447ff7d0e5",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/worker/src/sync.ts",
-      "bytes": 36186,
-      "sha256": "fc5d1d615b74ebb623a97cc63740f03fbf0f9a4076ec302bea6fea39b40478b5",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "bytes": 41138,
+      "sha256": "1bb6c406e5240ce71ce19346771ed71b5bb2eaa91ebca79dbac08b4dcf76f784",
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/worker/src/tombstones.ts",
       "bytes": 1577,
       "sha256": "39426760049545c87de243423306d30ce9623d47cb38943f826ce643fb02d96c",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/worker/src/trays.ts",
-      "bytes": 3715,
-      "sha256": "161a16d552214ad378d5b0232199b437980d2f9b38d100760ade3bd0685f1b2f",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "bytes": 6389,
+      "sha256": "7b1b6d62a2801e750aa1864e77fb37cbc81b18a771a5938711f49f64b4f0373f",
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/worker/src/ws-frame-budget.ts",
       "bytes": 1593,
       "sha256": "3b90d49bca07b8fadf099f1cc8e92f0575503c1a15efc0c7a02585781be7e8ef",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "apps/worker/wrangler.jsonc",
@@ -6460,8 +6614,8 @@
     },
     {
       "path": "CHANGELOG.md",
-      "bytes": 1028,
-      "sha256": "023a72dd94bf320a4c374b8ed1f67e5e19ce94bfe3b072ce181ff207ff2704a1",
+      "bytes": 1656,
+      "sha256": "c4eefe8accf1f700b27dd952809a982f62290068fb043ded32cffc0a45b433d5",
       "origin": "generated"
     },
     {
@@ -6479,194 +6633,212 @@
     {
       "path": "package-lock.json",
       "bytes": 139880,
-      "sha256": "f739cd68e394a056ca1ce801c62ad23a447af6c3c4cdfca87c97f16db3652efc",
+      "sha256": "d0c51de3a7bfbd2fb41ae715df4496c0678b638369b61dbee40fd2e07d96ee1c",
       "origin": "generated"
     },
     {
       "path": "package.json",
       "bytes": 1776,
-      "sha256": "96e7ce7e9a72ae567fec9ad7287e2ee00c7f7287e36fd0ff96d2965ed9ba80fd",
+      "sha256": "89854a60687989da3781cbadb6db527010af2d424447a4d8696d71d007cfcea2",
       "origin": "generated"
     },
     {
       "path": "packages/asset-catalog/package.json",
       "bytes": 110,
       "sha256": "0666ddb559493bd3b8093ab3b4fe868879da8d29b6abb759b27dc7001ff8aea3",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "packages/asset-catalog/src/adventure-v1.json",
       "bytes": 3,
       "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "packages/asset-catalog/src/animals-v1.json",
       "bytes": 3,
       "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "packages/asset-catalog/src/animals-v2.json",
       "bytes": 3,
       "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "packages/asset-catalog/src/bits-v1.json",
       "bytes": 3,
       "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "packages/asset-catalog/src/blendercity-v1.json",
       "bytes": 3,
       "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
+    },
+    {
+      "path": "packages/asset-catalog/src/cloth-v1.json",
+      "bytes": 1546,
+      "sha256": "402a4602c38879ad04058949d76a9a673d28d0963039f031191f60b7394f4426",
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "packages/asset-catalog/src/dev-puppet-v1.json",
       "bytes": 460,
       "sha256": "431b43f6dffc3ed08616026f9c592e918c7705e0d2b91b0c86a6562c7fe273dc",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "packages/asset-catalog/src/glbsymbol-v1.json",
       "bytes": 3,
       "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "packages/asset-catalog/src/houshin-v1.json",
       "bytes": 3,
       "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "packages/asset-catalog/src/imported-v1.json",
       "bytes": 340731,
       "sha256": "d24b02fbcb9d4ec310b3a7585cb616be279f175ea14eafacf968f0f24c8ac4e3",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "packages/asset-catalog/src/index.ts",
-      "bytes": 8529,
-      "sha256": "5c369124dd807de14f9e4525bc1c0eaf97bdbe457a4a11e6823f4b1269742308",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "bytes": 8603,
+      "sha256": "7a68a420368deac4ad35a4fe319f950ba9f10dd4ce7f46ff64b4707b36f2e967",
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "packages/asset-catalog/src/megakits-v1.json",
       "bytes": 13177,
       "sha256": "36e02bf69c59f9c9643954479ab459e0ee002eee4f47667e6d18329f59550c81",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "packages/asset-catalog/src/olympians-v1.json",
       "bytes": 3,
       "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "packages/asset-catalog/src/pocketworld-v1.json",
       "bytes": 3,
       "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "packages/asset-catalog/src/polypizza-v1.json",
       "bytes": 3,
       "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "packages/asset-catalog/src/provenance.ts",
-      "bytes": 6497,
-      "sha256": "9fa6b7d01a576156200ebe2bab7eec0cb94c0b49a2f76553a91b0d705e7c0bf4",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "bytes": 6733,
+      "sha256": "40aef3bde185801d35cb1ea9aca4f3cbeb94535f52b0666820562f467007993b",
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "packages/asset-catalog/src/sunmoonlake-v1.json",
       "bytes": 3,
       "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
+    },
+    {
+      "path": "packages/asset-catalog/src/tunnel-v1.json",
+      "bytes": 2284,
+      "sha256": "bfd73bab96370f9c941abbcb1255b7a68cc84fdbe9a357b8fb9a6ab29b08ca1e",
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "packages/asset-catalog/src/twfarm-v1.json",
       "bytes": 3,
       "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "packages/asset-catalog/src/twscenic-v1.json",
       "bytes": 3,
       "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "packages/asset-catalog/src/usermodels-v1.json",
       "bytes": 3,
       "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "packages/protocol/package.json",
       "bytes": 106,
       "sha256": "916ada33664609d5a3ebf896a6fa8c8408fe6a20f471eb4824d1dfc520e69c5b",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "packages/protocol/src/index.ts",
-      "bytes": 21538,
-      "sha256": "2291c22778dc42deda32996ac5e823e9065a87246cadc02863bf9d110ddbcaa0",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "bytes": 26246,
+      "sha256": "d2e9aff29a7a35612b0fabb97a3d3f50f572ac7a69f894826bb54215d6ccc7ce",
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "packages/room-core/package.json",
       "bytes": 107,
       "sha256": "9111c567bc23f23b491511bc1bec6c95cee6be53a3fb262c837c50ae63b113d7",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "packages/room-core/src/animation.ts",
       "bytes": 952,
       "sha256": "a96783a1484eb6f3dd7adf3d70cf239dcad5c1da969460db232b451fb92936c4",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "packages/room-core/src/grant-lifecycle.ts",
       "bytes": 3482,
       "sha256": "f3781a162830a2229888c2949bab24ffb26a193f5d46d59b163409b204f28574",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "packages/room-core/src/index.ts",
       "bytes": 7339,
       "sha256": "8ce1034812d0d4c39fb53cac646048607d82c8eafd7466e6e2badec08206a0a9",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "packages/sand-engine/package.json",
       "bytes": 559,
       "sha256": "fd92f788aade2563ce1d0159832bbc58d9d994e4a2a871633d99cca1cacf509d",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "packages/sand-engine/src/core.ts",
       "bytes": 13139,
       "sha256": "0eba27d71e67981a157817f2c13a54a54682d97c6ea4fdb5c2ccf4631c1f40bb",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
+    },
+    {
+      "path": "packages/sand-engine/src/paint.ts",
+      "bytes": 2785,
+      "sha256": "162e9fd199d720a03980ce6b10db60910d473f2be501506aebe569a35922bd83",
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "packages/sand-engine/src/render.ts",
       "bytes": 11695,
       "sha256": "076e6f44b1138b0f8aeff747848644fc8dabbb7743a959253ba42d309a08283f",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "packages/sand-engine/src/tray.ts",
       "bytes": 1610,
       "sha256": "ebee6fcd160fe1ad7b69a840ecb3fad57ebf2d5cdd4b7140df775d8123c86eb1",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "playwright.public.config.ts",
@@ -6676,8 +6848,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 4562,
-      "sha256": "a7fbabf1ad9840d448db6bebbe952508145d50078033170bc515e26364b53308",
+      "bytes": 4700,
+      "sha256": "f0bfdd78e775fdd72cca6ce1ccead8c9b67064273b036b7b15fc08c18432ce87",
       "origin": "generated"
     },
     {
@@ -6690,253 +6862,277 @@
       "path": "specs/001-sandtray/contracts/asset-draft.schema.json",
       "bytes": 958,
       "sha256": "6aa33a45772fed464088075510e2b1e48561b6c161a0d63188567ed17fe3fbd7",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "specs/001-sandtray/contracts/asset-release.schema.json",
       "bytes": 8260,
       "sha256": "620179d105e82c15586e54b41d621321b0229ee2a14384b6da09ce9f5ce2a44d",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "specs/001-sandtray/contracts/grant.schema.json",
       "bytes": 1668,
       "sha256": "0fa4163b92b856c8cbe5e00b388e171130cd5c821f068ba6ee39ca3c6b960a49",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "specs/001-sandtray/contracts/lease.schema.json",
       "bytes": 1111,
       "sha256": "abb1a1cbca7af12952cfd64f31b34a2cf419d5e378abc6fcf0b6f9e952064525",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "specs/001-sandtray/contracts/openapi.json",
-      "bytes": 86195,
-      "sha256": "cb98b4f9ba422166557b014a39191fdb6fc9a9a3a7ab26ba372ca520aab5aed5",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "bytes": 90318,
+      "sha256": "4a7e218112a623bdb33ef0775448d8e25afc690e97308cae1482e0fa01af6aa5",
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "specs/001-sandtray/contracts/scene-v1.schema.json",
       "bytes": 7913,
       "sha256": "6101df512c2f01a3f42c0a0de84e5086376d1a269afccc2ba79930e5d5e48d92",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "specs/001-sandtray/contracts/scene.schema.json",
-      "bytes": 14325,
-      "sha256": "cedecf8e4e506096fe9ff45acad8232236f9e52fb8e670aa4d5d034f1b0aa8e4",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "bytes": 17668,
+      "sha256": "93f17283842a98d283c27602ee9f9e624660cac8764d2386d49c73826bd3a9ae",
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "specs/001-sandtray/contracts/ws-inbound.schema.json",
-      "bytes": 38643,
-      "sha256": "cbf625a48e556bf30fe1508991129510c83020309f6f45d77070339dd3babd66",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "bytes": 45575,
+      "sha256": "eebc00ef6f543d8a0af075b24a49c5d4b15ff2d7d4906a180a969e7d562a2eee",
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "specs/001-sandtray/contracts/ws-outbound.schema.json",
-      "bytes": 29884,
-      "sha256": "5c59bbacce63a5d1c843dadaeacd4345e89dacc558e9e05ed9c943580e221c59",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "bytes": 30952,
+      "sha256": "6976fae95ffefef79566ae2898291005eaba582877de2c3e69ae945b6a8383fa",
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "tests/animation.test.ts",
       "bytes": 1096,
       "sha256": "9296e00050a2ae1b0ec0d6ea3cf6936e27f97e471440606fcb353a599b717131",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "tests/bury.test.ts",
       "bytes": 1475,
       "sha256": "5bae89746b8c2f2b2435305a0768f9e65377896169561754416d5360a2afb523",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "tests/client-presence.test.ts",
       "bytes": 3100,
       "sha256": "92ab817dd264346e1250b4c376365c5b0fcf710651b1ed203b7e296485b9ad2b",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
+    },
+    {
+      "path": "tests/cloth-disclosure.test.ts",
+      "bytes": 3086,
+      "sha256": "6ffd1973c4692a4798abeec207bcecac7fe1de58a9a44a6956adb45ca2659f54",
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
+    },
+    {
+      "path": "tests/cloth.test.ts",
+      "bytes": 7215,
+      "sha256": "ddc819ffd2172b6558b8431174b59940b602ef42f67b20efbf0527820218a3ff",
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "tests/color-variant.test.ts",
       "bytes": 4039,
       "sha256": "5e85d490fb8a3fa652f1411627d0dd77987bdd7af3b16d933fb77ad398a3a3b8",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
+    },
+    {
+      "path": "tests/companion-characters.test.ts",
+      "bytes": 1770,
+      "sha256": "d6a213a6e41299e94880c5928123c2f40adf3c52898892b5337f5e6d272b619a",
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
+    },
+    {
+      "path": "tests/companion.test.ts",
+      "bytes": 3353,
+      "sha256": "4a842414eadec66f16ab85d89a39f43342194140efd993e493362a5b440d8f16",
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "tests/entry-gate.test.ts",
       "bytes": 3481,
       "sha256": "f2cb3ea4bfe353dc9247e402f9a3880d03621282481b92cc0a1306ce2a2373c7",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "tests/garden-audio.test.ts",
       "bytes": 2769,
       "sha256": "65286017173dcbf2f1d40adc9a30f4b8b602d23edf00be3a8ea3e7f11c1d33ae",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "tests/garden-bridge-details.test.ts",
       "bytes": 8269,
       "sha256": "ff9e8cddbe1679594b30f975b7cf9e48300bb61ef4e28404a44c6edbcd3f2539",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "tests/garden-g3-layout.test.ts",
       "bytes": 5068,
       "sha256": "0110e99d68e5830537117a8b4e243d7e8428fabfa197404e26481ed0f99ade75",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "tests/garden-landmarks.test.ts",
       "bytes": 11670,
       "sha256": "88a9c6744b150a8013f8414332c32e7e3933f68c46881d9d0761e4fbca321314",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "tests/garden-pond-life.test.ts",
       "bytes": 11425,
       "sha256": "4dc245f586b6e61467b8a03e8ff41f0c961517d38394bac2abb384a88b4a3ac6",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "tests/garden-preferences.test.ts",
       "bytes": 2093,
       "sha256": "46d56ce3dec77f9a101d189e3493991b2063fe77a0ece71424c4946f31d8113a",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "tests/garden-reflection.test.ts",
       "bytes": 1001,
       "sha256": "fbb2d5b82066b2d65a130edbf723ca213aa6db4c4ebf98573df8a18df059aa32",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "tests/garden-visual.test.ts",
       "bytes": 9021,
       "sha256": "820490788d5e9190776f57b8d6a415f151833a179fc6434727cdf477d3d25122",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "tests/garden-wow-g1.test.ts",
       "bytes": 6017,
       "sha256": "ffe51a06a8477dd8c32c6af1002a46f577b81440f246bc3136bca2ce71c21462",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "tests/garden-wow-g2.test.ts",
       "bytes": 7141,
       "sha256": "c640ecb92b2450bd994351b198e8b1a12a27d1214d7bd13aa4deee09d0c1eb0c",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "tests/garden-wow-w1.test.ts",
       "bytes": 7701,
       "sha256": "a45473b04c59f72f2bf9551bcb821b9d580cc8fb132fc036ceb2383bd66d5855",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "tests/garden-wow-w2.test.ts",
       "bytes": 11720,
       "sha256": "d6ec3d83ef5c9aa0accfebab24fc4d4c5eed401205e1242699d5df2b5c64089e",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "tests/garden.test.ts",
       "bytes": 4236,
       "sha256": "4ef631b14732596b6e848162794da299e5574f69eaae603ab3e222a2e832223a",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "tests/grant-lifecycle.test.ts",
       "bytes": 4503,
       "sha256": "99ffcd16564bfc2b0d039a80d203f8d47440208b3b7e92914b58a6fa2224ea79",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "tests/look-at-object.test.ts",
       "bytes": 3362,
       "sha256": "edf8bbef8182db727c8ff7a1a548f4b9287907df6ede738ed3378f1813fdf7e7",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "tests/mound-display-height.test.ts",
       "bytes": 3265,
       "sha256": "8eca908abd88ed0ab2c392bb41106fd3d9e04a0e1ea1d56a5bcbced1a1537a43",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "tests/oidc-token-exchange.test.ts",
       "bytes": 2547,
       "sha256": "1662f95522de244ff6fbf40cfb1c8b19a6bb9d689ea92e395322d6fe717b20ce",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "tests/oidc.test.ts",
       "bytes": 2092,
       "sha256": "a4bb3e0718249eecbaa3227cb345632960c94d22674fd5e614d3c78b8f71c3ff",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "tests/protocol-capability.test.ts",
       "bytes": 1137,
       "sha256": "e0b946f01a6d85eb2d41108428e664737e75761f174251cb193c4767f3c82576",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "tests/public.test.ts",
-      "bytes": 2891,
-      "sha256": "7a166f13b060cd1058cbaceec9409ffeb64154e4d23bfc3e87b9a8c9eac757f3",
+      "bytes": 3068,
+      "sha256": "b8a4545f483a2141835bc48857e40d359386ad5406dce359a8a7f86742c479f3",
       "origin": "generated"
     },
     {
       "path": "tests/public/budget.ts",
       "bytes": 646,
       "sha256": "9f1270bedcf71686ae94ed9a94143512a23c14a6b99f8cfc921aac4e263b226e",
-      "origin": "git-test-fixture:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git-test-fixture:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "tests/public/entry.ts",
       "bytes": 45980,
       "sha256": "d0e2fafc246cd238187234a4774b5e1f1dc45f59599e3c23c4c5645adf4fcb09",
-      "origin": "git-test-fixture:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git-test-fixture:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "tests/public/garden.spec.ts",
       "bytes": 6551,
       "sha256": "fec5575c8e5ddf6696a51ab4edd69d3afd21d00b3deb6600162ecd509d23dad2",
-      "origin": "git-test-fixture:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git-test-fixture:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "tests/public/imported.spec.ts",
       "bytes": 4219,
       "sha256": "c8d06e6b1564880efffda16c507d1ce9095a467adba4a59fc5ea0212f8149eaa",
-      "origin": "git-test-fixture:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git-test-fixture:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "tests/public/look-at-seats.spec.ts",
       "bytes": 3207,
       "sha256": "7ad336a0954da67e3ee17d40cc20fb88e9f8db87f42daca30d6645a663e0cc91",
-      "origin": "git-test-fixture:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git-test-fixture:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "tests/public/open-panels.ts",
       "bytes": 821,
       "sha256": "0f78f33887c4fda308c00b9bb82645ca8e8314722994fc128ef568da9dbc17bc",
-      "origin": "git-test-fixture:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git-test-fixture:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "tests/public/setup.ts",
       "bytes": 312,
-      "sha256": "b159e262832e0e9abf8dd0ca3e11e92dc49b9167c79022f9d0a1e4356dede651",
+      "sha256": "fd1422947c4bec0da8e734f0eaf236ee28e02081f2d5df8aafe8f751ca0efb76",
       "origin": "generated"
     },
     {
       "path": "tests/public/shelf.ts",
       "bytes": 405,
       "sha256": "430513014dfe9cea4e5d49008054d3a8b18aa8b489d19040c7e2619b382e5f8e",
-      "origin": "git-test-fixture:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git-test-fixture:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "tests/public/smoke.spec.ts",
@@ -6948,7 +7144,7 @@
       "path": "tests/public/sync.spec.ts",
       "bytes": 6709,
       "sha256": "10f16411b9e24494b5d62763edc846add872b10909d953158ed88f4ce04e064a",
-      "origin": "git-test-fixture:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git-test-fixture:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "tests/public/wrangler.jsonc",
@@ -6960,102 +7156,132 @@
       "path": "tests/quick-tools-placement.test.ts",
       "bytes": 2111,
       "sha256": "111684ae70160796d330a211f910c6971c501c5b92baa2d7aa41ee296541cbd4",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "tests/receipt-retry.test.ts",
       "bytes": 2142,
       "sha256": "308e3790c1ac8fccf7f9ed4a6dc90a92ff875fee78c765c7835d99d66e20cff5",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "tests/rejection-words.test.ts",
       "bytes": 1031,
       "sha256": "5db937871ae932892ceaf673fd6919cec258a3b44a7f3217d9e1cf8b7108b64e",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "tests/request-label.test.ts",
       "bytes": 1013,
       "sha256": "e8887666f0553ebc78f60c3e50139f01f10a6f558264b5e119ac4edb7b953c66",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
+    },
+    {
+      "path": "tests/ribbon.test.ts",
+      "bytes": 8530,
+      "sha256": "31a015748cb6997c07fc8f70fbcb4fb0a3382f064169dcb991b894ca35416eeb",
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "tests/room-core.test.ts",
       "bytes": 5417,
       "sha256": "42d133ee7ed012ad33005d5cae1a0ae96bf867999c95d602ecb2de8ed6736434",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "tests/runtime/local-asset-gate.ts",
       "bytes": 1599,
       "sha256": "23ca6003e153a024eea4dcd0aa051c991ef4ba40979b2e5cfafdf6c5eb56917e",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "tests/scene-snapshot-v2.test.ts",
       "bytes": 4575,
       "sha256": "a9562b09e84f362b51bc93c1ee9f37f00b34cd9f8f728af4d7e5f4087c018342",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
+    },
+    {
+      "path": "tests/spray.test.ts",
+      "bytes": 9247,
+      "sha256": "5480f67167a543d8cc97cafa31eecacbebce3c3e862bb1e817f602dc3c0fcb1b",
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "tests/static-gate-f1-recheck.test.ts",
       "bytes": 2881,
       "sha256": "9826dfe7c963f09a1a94489c0600388aab7fca6f9d6910333a5093f1fff719c5",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "tests/static-gate-non-author-review.test.ts",
       "bytes": 1046,
       "sha256": "f84bc483cefe656eb8c0de41c4567edb00928340004892f9b395dce9fc51b666",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "tests/static-gate.test.ts",
       "bytes": 4788,
       "sha256": "ecf4276071203c07fd432a81c50da3e175c0cdd6c3786a21e4624862462939b6",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
+    },
+    {
+      "path": "tests/telescope.test.ts",
+      "bytes": 3134,
+      "sha256": "cfdaf171ed00dc2847c117633e70e0139d99d98cdd13fc2494a914727a3a887b",
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "tests/tombstone-ttl.test.ts",
       "bytes": 2896,
       "sha256": "c347e8cdaa68402c2672c11f9f2962a2a99e88f2eb132e2c5c5a45a0af208a2a",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "tests/tray-blue-wall.test.ts",
       "bytes": 6061,
       "sha256": "7d9c7d0d1071e4e300bf5262aa153bbc14122828b3c99ea4d4aedd57719f289f",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "tests/tray-initial-surface.test.ts",
       "bytes": 1302,
       "sha256": "2aa6135fcaf6eca95576fc29dd1b1a227ccb2304611057bb97b40fd0c4081acf",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "tests/tray-shapes.test.ts",
       "bytes": 7754,
       "sha256": "d921e833bbddacd2263609d4aecd0f456192abebcda08ab0bd26d24d9b24877e",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "tests/tray-sync.test.ts",
       "bytes": 7035,
       "sha256": "8645b78ad1fcb0ac72171c19920dd939d030b2a15fac1c3885d547137490fec7",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
+    },
+    {
+      "path": "tests/tunnel-assets.test.ts",
+      "bytes": 8872,
+      "sha256": "f00c5f1eba25fca756c5f07e75828fe40d514c185a3554592fa4fa24bf4c99be",
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
+    },
+    {
+      "path": "tests/tunnel-gap.test.ts",
+      "bytes": 3800,
+      "sha256": "5f85a8117bd48533e16df52b100f319bdbbca3e69519c45a4749eb9d055c8736",
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "tests/ws-frame-budget.test.ts",
       "bytes": 2717,
       "sha256": "bd3d5e7bb694c7f2c6cee659ba2215d819abc4e35725585f06e6225d76b15904",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "THIRD_PARTY_NOTICES.md",
-      "bytes": 2712,
-      "sha256": "ae5e6c9ae2e5f1a60a190aa96db743e446db6da203e42df8158952b1fe54adc9",
+      "bytes": 3078,
+      "sha256": "908ace94c4e24d4d83766d6681f13ee4f94d4a67e18654dca2a1294a57af16e1",
       "origin": "generated"
     },
     {
@@ -7068,37 +7294,67 @@
       "path": "tools/assets/build_garden_pbr_v3.py",
       "bytes": 2240,
       "sha256": "31492619048c407913694dd2cc2b0f383eb397894db28d2e99bd7f32e7432b7d",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "tools/assets/build_garden_v2.py",
       "bytes": 18616,
       "sha256": "9a6760dec680dbc2d69026bf41cf2f18892758581eaa433f868820236118e2e7",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
+    },
+    {
+      "path": "tools/assets/build_procedural_batch.mjs",
+      "bytes": 9174,
+      "sha256": "44823869cdc79c6bd149a6a9e131299c379a629decb82d177d2161b89a652728",
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
+    },
+    {
+      "path": "tools/assets/cloth-v1.json",
+      "bytes": 852,
+      "sha256": "82e1f61d11f7d594d19fae26c31f800bae261bfc158b24c12478702157657bea",
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
+    },
+    {
+      "path": "tools/assets/cloth-v1/models.js",
+      "bytes": 6004,
+      "sha256": "4f44b22c365046954972b76f217497f2068a3a3e688eb76f421c3ca149fdefd1",
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "tools/assets/export_garden_pbr_v3.py",
       "bytes": 2353,
       "sha256": "b6ba3b928385aa003a8a0d59018a052affd9b5f75ee5749df38970f8859d6570",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "tools/assets/prepare_garden_pbr_v1.py",
       "bytes": 1754,
       "sha256": "711dcf46512a35de5cc0def5a1d06deb52827c109be20433f7e784bab60bb678",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
+    },
+    {
+      "path": "tools/assets/tunnel-v1.json",
+      "bytes": 1122,
+      "sha256": "acea98b9b6279bcb78fb2b3e3d6bab43d7629ac0b8c5300b2e805a487f1295db",
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
+    },
+    {
+      "path": "tools/assets/tunnel-v1/models.js",
+      "bytes": 10620,
+      "sha256": "6b04c3ef7c0d2acf377fec42031d9e77f816642ba128cbb042e2c4126336df68",
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "tools/contracts.ts",
       "bytes": 11574,
       "sha256": "8fc076c6a2060c28663fdc86471c8db204b9a76152477a700b7b6d5a00d16966",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "tools/create-dev-assets.ts",
       "bytes": 6374,
       "sha256": "1ef1d8f2f0e90e7f2c235eefda0e50b640f52feab991a5ce83e02684028ac8a7",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "tools/public-contracts.ts",
@@ -7116,12 +7372,12 @@
       "path": "tools/verification/env-probe.mjs",
       "bytes": 6689,
       "sha256": "bd9a8a16cf49ae7dbff79405ad7f9b528922a72c280746e0030faad683db860b",
-      "origin": "git:a6e097a7ef7b00d7609f0b59f7f955035aa78553"
+      "origin": "git:4d35ad1fcfc6568eee7bb697ba54c945e0fc464d"
     },
     {
       "path": "tools/verify-public.mjs",
       "bytes": 3188,
-      "sha256": "5e53daa520d267a2bc6bf790dbc11f1ef22aa1aa7eba300a75fadcc66bc7be2a",
+      "sha256": "d80c5b036f7edb8b6b32880d7deef587ab83b1fc1dd51d8c3be425abf454fe98",
       "origin": "generated"
     },
     {
@@ -7155,6 +7411,6 @@
   ],
   "sourceArchive": {
     "path": "apps/web/public/source-code.zip",
-    "sha256": "d482543f510656e2eebd20af6b874486c817a53db58e1f50f769777b745c6c00"
+    "sha256": "4ad227b42c1b75960d4075d966c34238dcacb795d9c09df1355ce4d0008df14f"
   }
 }

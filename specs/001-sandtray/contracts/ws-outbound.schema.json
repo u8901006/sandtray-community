@@ -1102,6 +1102,48 @@
           ],
           "additionalProperties": false
         },
+        "spray": {
+          "type": "object",
+          "properties": {
+            "color": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 12
+            },
+            "points": {
+              "minItems": 1,
+              "maxItems": 8,
+              "type": "array",
+              "items": {
+                "type": "array",
+                "prefixItems": [
+                  {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 239
+                  },
+                  {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 239
+                  }
+                ],
+                "items": false,
+                "minItems": 2,
+                "maxItems": 2
+              }
+            }
+          },
+          "required": [
+            "color",
+            "points"
+          ],
+          "additionalProperties": false
+        },
+        "wash": {
+          "type": "boolean",
+          "const": true
+        },
         "waterLevel": {
           "type": "number",
           "minimum": 0,

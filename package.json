@@ -1,7 +1,7 @@
 {
   "name": "sandtray-community",
   "private": true,
-  "version": "0.1.0-public.1",
+  "version": "0.1.0-public.2",
   "type": "module",
   "workspaces": [
     "apps/*",

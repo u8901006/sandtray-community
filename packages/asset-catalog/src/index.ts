@@ -15,6 +15,7 @@ import glbSymbol from './glbsymbol-v1.json' with {type:'json'};
 import pocketWorld from './pocketworld-v1.json' with {type:'json'};
 import polyPizza from './polypizza-v1.json' with {type:'json'};
 import twFarm from './twfarm-v1.json' with {type:'json'};
+import cloth from './cloth-v1.json' with {type:'json'};
 import {provenanceFor,provenanceIssues,WITHDRAWN_PACKS,type Provenance} from './provenance';
 import type {ColorVariant} from '../../protocol/src/index';
 export * from './provenance';
@@ -44,7 +45,7 @@ const practiceAssets:RawAsset[] = [
                                                                                 
   {id:'DEV_PUPPET',name:'練習玩偶',category:'練習',symbol:'♟',color:'#8d7ae5',url:'/dev-assets/puppet-v2.glb',version:'puppet-v2',clips:[{id:'clip-0',name:'待機',durationMs:1000},{id:'clip-1',name:'原地行走',durationMs:800}]},
 ];
-export const devAssets:CatalogAsset[]=[...practiceAssets,...imported,...animals,...blenderCity,...sunMoonLake,...twScenic,...olympians,...megaKits,...adventure,...bits,...userModels,...glbSymbol,...pocketWorld,...polyPizza,...twFarm,...(houshin as RawAsset[])].map(withProvenance);
+export const devAssets:CatalogAsset[]=[...practiceAssets,...imported,...animals,...blenderCity,...sunMoonLake,...twScenic,...olympians,...megaKits,...adventure,...bits,...userModels,...glbSymbol,...pocketWorld,...polyPizza,...twFarm,...cloth,...(houshin as RawAsset[])].map(withProvenance);
 export const assetById=new Map(devAssets.map(asset=>[asset.id,asset]));
                                                                                    
 export const readyAssetCount=new Set(devAssets.filter(asset=>(asset as {status?:string}).status==='ready').map(asset=>asset.id)).size;
@@ -69,7 +70,7 @@ export type DevAssetId=typeof devAssets[number]['id'];
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
 export type PinnedModel={id:string;version:string;sha256:string;bytes:number;url:string;privateSource?:string};
 const pinnedList:PinnedModel[]=[];const pinned=new Set<string>();
-for(const raw of [...imported,...animals,...previousAnimals,...blenderCity,...sunMoonLake,...twScenic,...olympians,...megaKits,...adventure,...bits,...userModels,...glbSymbol,...pocketWorld,...polyPizza,...twFarm] as PinnedModel[]){const key=raw.id+'\0'+raw.version;if(pinned.has(key))continue;pinned.add(key);pinnedList.push({id:raw.id,version:raw.version,sha256:raw.sha256,bytes:raw.bytes,url:raw.url,privateSource:raw.privateSource});}
+for(const raw of [...imported,...animals,...previousAnimals,...blenderCity,...sunMoonLake,...twScenic,...olympians,...megaKits,...adventure,...bits,...userModels,...glbSymbol,...pocketWorld,...polyPizza,...twFarm,...cloth] as PinnedModel[]){const key=raw.id+'\0'+raw.version;if(pinned.has(key))continue;pinned.add(key);pinnedList.push({id:raw.id,version:raw.version,sha256:raw.sha256,bytes:raw.bytes,url:raw.url,privateSource:raw.privateSource});}
 export const pinnedModels:readonly PinnedModel[]=pinnedList;
 export function privateModelUrl(asset:Pick<CatalogAsset,'id'|'version'|'provenance'>,roomId:string):string|undefined{
  if(!asset.provenance.releasable||!pinned.has(asset.id+'\0'+asset.version))return undefined;

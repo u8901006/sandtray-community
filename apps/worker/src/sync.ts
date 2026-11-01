@@ -1,15 +1,18 @@
 import {AdmissionRoom,type RoomRecord} from './room';
 import type {Env,Identity} from './env';
 import {json,error,isInputError} from './http';
-import {parseInbound,validTransform,hasV2Capability,offersWsSubprotocol,WS_SUBPROTOCOL,type Action} from '../../../packages/protocol/src/index';
+import {parseInbound,validTransform,hasV2Capability,offersWsSubprotocol,WS_SUBPROTOCOL,TUNNEL_DEFAULT,RIBBON_MAX,type Action} from '../../../packages/protocol/src/index';
 import {acquireLease,reduceTransform,authorizeTransform,revokeAll,clientPresence,Rejected,type Connection} from '../../../packages/room-core/src/index';
 import {issueGrant,revokeGrant} from '../../../packages/room-core/src/grant-lifecycle';
 import {pathPosition} from '../../../packages/room-core/src/animation';
 import {devAssets,validAssetVersion,clipDuration,supportsColorVariants} from '../../../packages/asset-catalog/src/index';
 import {parseInboundFrame,recoverRejectedOperationId,type FrameBudget} from './ws-frame-budget';
-import {TRAYS_TABLE,TRAY_HISTORY_TABLE,readTrays,writeTray,strokeTray,quantizeWater,recordTrayStep,trayStepStates,type TrayRow} from './trays';
+import {TRAY_TABLES,TRAY_HISTORY_TABLES,readTrays,writeTray,strokeTrayPainted,sprayTray,hasPaint,quantizeWater,recordTrayStep,trayStepStates,type TrayRow} from './trays';
 import {bytesToBase64,base64ToBytes} from '../../../packages/sand-engine/src/core';
 import {objectInTray} from '../../../packages/room-core/src/index';
+import {RIBBON_HISTORY_TABLE,withoutObject,recordRibbonStep,ribbonStepState} from './ribbons';
+                                                                                           
+const HISTORY_TABLES=['history','ribbon_history',...TRAY_HISTORY_TABLES];
                                                                                                                                                               
 const OPERATIONS_LOOKUP_INDEX='CREATE INDEX IF NOT EXISTS operations_actor_op ON operations(actor,op,epoch)';
 interface Attachment extends FrameBudget {hash:string;identity:Identity;connectionId:string;epoch:number}
@@ -57,7 +60,7 @@ export class RoomDurableObject extends AdmissionRoom {
    const priority=cmd.type==='control.revokeAll'||cmd.type==='permission.revoke'||cmd.type==='animation.stopAll';
    let limited=priority?++a.priority>10:++a.normal>60;
    if(cmd.type==='object.transform.preview')limited=++a.previews>15||limited;
-   if(['object.create','object.delete','object.transform.commit','object.appearance.commit','animation.set','sand.stroke','tray.water'].includes(cmd.type))limited=++a.commits>10||limited;
+   if(['object.create','object.delete','object.transform.commit','object.appearance.commit','animation.set','sand.stroke','tray.water','sand.spray','tray.wash','room.tunnel','ribbon.create','ribbon.delete'].includes(cmd.type))limited=++a.commits>10||limited;
    ws.serializeAttachment(a);if(limited)throw new Rejected('RATE_LIMITED',Math.max(1,a.window+1000-now));
    const identity=await this.env.AUTH_DO.getByName('sessions').lookup(a.hash);if(!identity){ws.close(4003,'UNAUTHENTICATED');throw new Rejected('UNAUTHENTICATED');}
    await this.assertAvailable();s=this.read();this.member(s,identity);
@@ -73,7 +76,7 @@ export class RoomDurableObject extends AdmissionRoom {
    const connection:Connection={participantId:identity.participantId,clinicId:identity.clinicId,sessionEpoch:s.sessionEpoch};
    if(s.clientLiveUntil<=Date.now()&&Object.values(s.grants).some(g=>g.active)){for(const g of Object.values(s.grants)){g.active=false;g.version++;}s.leases={};this.save(s);this.broadcast(this.message(s,'permission.changed',{controlEpoch:s.controlEpoch,grant:null}));}
    if(this.enforceAnimations(s,Date.now())){this.save(s);this.broadcast(this.snapshotEvent(s));}
-   const beforeObjects=JSON.stringify(s.objects);const events:unknown[]=[];let changed=false;let ephemeral=false;let historyMove=false;let trayWrite:TrayRow|undefined;let trayHistory:{before:{data:string;water:number};gesture?:string}|undefined;const restoredTrays:TrayRow[]=[];
+   const beforeObjects=JSON.stringify(s.objects),beforeRibbons=JSON.stringify(s.ribbons??{});const events:unknown[]=[];let changed=false;let ephemeral=false;let historyMove=false;let trayWrite:TrayRow|undefined;let trayHistory:{before:{data:string;water:number;paint:string};gesture?:string}|undefined;const restoredTrays:TrayRow[]=[];
    const client=()=>{if(identity.role!=='client')throw new Rejected('PERMISSION_DENIED');};
    const object=()=>{if(!Object.hasOwn(s!.objects,cmd.objectId))throw new Rejected('PERMISSION_DENIED');return s!.objects[cmd.objectId];};
    const revision=()=>{if(object().revision!==cmd.expectedObjectRevision)throw new Rejected('REVISION_CONFLICT');};
@@ -89,7 +92,9 @@ export class RoomDurableObject extends AdmissionRoom {
                                                                                                                                 
                                                                                                              
      const current=readTrays(this.ctx.storage.sql,s.trays);
-     for(const state of trayStepStates(this.ctx.storage.sql,step,cmd.type==='scene.undo'?'before':'after')){const tray=current.find(t=>t.id===state.id);if(!tray)continue;tray.hm.data.set(base64ToBytes(state.data));tray.water=state.water;tray.revision++;restoredTrays.push(tray);}
+     for(const state of trayStepStates(this.ctx.storage.sql,step,cmd.type==='scene.undo'?'before':'after')){const tray=current.find(t=>t.id===state.id);if(!tray)continue;tray.hm.data.set(base64ToBytes(state.data));tray.water=state.water;if(state.paint!==undefined)tray.paint.set(base64ToBytes(state.paint));tray.revision++;restoredTrays.push(tray);}
+                                                                                                         
+     const ribbons=ribbonStepState(this.ctx.storage.sql,step,cmd.type==='scene.undo'?'before':'after');if(ribbons)s.ribbons=ribbons;
      s.objects=restored;s.historyCursor=cmd.type==='scene.undo'?cursor-1:cursor+1;delete s.historyGesture;s.grants={};s.leases={};s.controlEpoch++;s.requests={};changed=true;historyMove=true;events.push(this.snapshotEvent(s));break;
     }
     case 'object.create':{
@@ -101,7 +106,13 @@ export class RoomDurableObject extends AdmissionRoom {
      const colorVariant=cmd.colorVariant??(supportsColorVariants(cmd.assetId,cmd.assetVersion)?'t2':undefined);
      s.objects[cmd.objectId]={id:cmd.objectId,assetId:cmd.assetId,assetVersion:cmd.assetVersion,transform:cmd.transform,materialOverrides:{},...(colorVariant?{colorVariant}:{}),hidden:false,revision:0,trayId:cmd.trayId??'dry'};changed=true;break;
     }
-    case 'object.delete':client();revision();delete s.objects[cmd.objectId];delete s.leases[cmd.objectId];for(const g of Object.values(s.grants)){if(g.objectId===cmd.objectId){g.active=false;g.version++;}}changed=true;break;
+    case 'object.delete':{
+     client();revision();delete s.objects[cmd.objectId];delete s.leases[cmd.objectId];for(const g of Object.values(s.grants)){if(g.objectId===cmd.objectId){g.active=false;g.version++;}}changed=true;
+                                                                                                                                         
+                                                                                                                                        
+     if(s.ribbons){const next=withoutObject(s.ribbons,cmd.objectId);if(JSON.stringify(next)!==JSON.stringify(s.ribbons)){s.ribbons=next;events.push(this.snapshotEvent(s));}}
+     break;
+    }
     case 'object.transform.commit':s=reduceTransform(s,connection,cmd,Date.now()) as SharedState;if(s.objects[cmd.objectId].animation)s.objects[cmd.objectId].animation!.state='stopped';changed=true;break;
     case 'object.appearance.commit':{
      client();const o=object();revision();
@@ -144,11 +155,45 @@ export class RoomDurableObject extends AdmissionRoom {
                                                                                                                   
      client();
      const tray=readTrays(this.ctx.storage.sql,s.trays).find(t=>t.id===cmd.trayId)!;
-     trayHistory={before:{data:bytesToBase64(tray.hm.data),water:tray.water},...(cmd.gestureId?{gesture:identity.participantId+':'+tray.id+':'+cmd.type+':'+cmd.gestureId}:{})};
+     trayHistory={before:{data:bytesToBase64(tray.hm.data),water:tray.water,paint:bytesToBase64(tray.paint)},...(cmd.gestureId?{gesture:identity.participantId+':'+tray.id+':'+cmd.type+':'+cmd.gestureId}:{})};
      if(cmd.type==='tray.water'){const level=quantizeWater(cmd.level);if(level===tray.water)throw new Rejected('INVALID_PAYLOAD');tray.water=level;}
-     else {if(cmd.points.some(([i,j]:[number,number])=>i>=tray.hm.w||j>=tray.hm.h||!tray.hm.mask[j*tray.hm.w+i]))throw new Rejected('INVALID_PAYLOAD');strokeTray(tray.hm,cmd.tool,cmd.points);}
+     else {if(cmd.points.some(([i,j]:[number,number])=>i>=tray.hm.w||j>=tray.hm.h||!tray.hm.mask[j*tray.hm.w+i]))throw new Rejected('INVALID_PAYLOAD');strokeTrayPainted(tray.hm,tray.paint,cmd.tool,cmd.points);}
      tray.revision++;s.sceneRevision++;trayWrite=tray;
      events.push(this.message(s,'tray.changed',{trayId:tray.id,trayRevision:tray.revision,sceneRevision:s.sceneRevision,operationId:cmd.operationId,...(cmd.type==='sand.stroke'?{stroke:{tool:cmd.tool,points:cmd.points}}:{}),waterLevel:tray.water}));break;
+    }
+    case 'sand.spray':case 'tray.wash':{
+                                                                                                                                      
+                                                                                                                                 
+                                                                                                                                         
+     const tray=readTrays(this.ctx.storage.sql,s.trays).find(t=>t.id===cmd.trayId)!;
+     trayHistory={before:{data:bytesToBase64(tray.hm.data),water:tray.water,paint:bytesToBase64(tray.paint)},...(cmd.type==='sand.spray'&&cmd.gestureId?{gesture:identity.participantId+':'+tray.id+':'+cmd.type+':'+cmd.gestureId}:{})};
+     if(cmd.type==='tray.wash'){if(!hasPaint(tray.paint))throw new Rejected('INVALID_PAYLOAD');tray.paint.fill(0);}
+     else {if(cmd.points.some(([i,j]:[number,number])=>i>=tray.hm.w||j>=tray.hm.h||!tray.hm.mask[j*tray.hm.w+i]))throw new Rejected('INVALID_PAYLOAD');sprayTray(tray.hm,tray.paint,cmd.color,cmd.points);}
+     tray.revision++;s.sceneRevision++;trayWrite=tray;
+     events.push(this.message(s,'tray.changed',{trayId:tray.id,trayRevision:tray.revision,sceneRevision:s.sceneRevision,operationId:cmd.operationId,...(cmd.type==='sand.spray'?{spray:{color:cmd.color,points:cmd.points}}:{wash:true}),waterLevel:tray.water}));break;
+    }
+    case 'room.tunnel':{
+                                                                                                                                   
+                                                                                                                    
+     const current=s.tunnel??TUNNEL_DEFAULT;
+     if(cmd.expectedTunnelRevision!==current.revision)throw new Rejected('REVISION_CONFLICT');
+     if(cmd.enabled===current.enabled&&cmd.style===current.style)throw new Rejected('INVALID_PAYLOAD');
+     s.tunnel={enabled:cmd.enabled,style:cmd.style,revision:current.revision+1};s.sceneRevision++;events.push(this.snapshotEvent(s));break;
+    }
+    case 'ribbon.create':case 'ribbon.delete':{
+                                                                                                                                      
+                                                                                                                                  
+                                                     
+     const ribbons={...s.ribbons};
+     if(cmd.type==='ribbon.delete'){if(!Object.hasOwn(ribbons,cmd.ribbonId))throw new Rejected('INVALID_PAYLOAD');delete ribbons[cmd.ribbonId];}
+     else {
+      if(Object.hasOwn(ribbons,cmd.ribbonId)||Object.keys(ribbons).length>=RIBBON_MAX||['__proto__','constructor','prototype'].includes(cmd.ribbonId))throw new Rejected('INVALID_PAYLOAD');
+      if(cmd.objectIds.some((objectId:string)=>!Object.hasOwn(s!.objects,objectId)))throw new Rejected('PERMISSION_DENIED');
+      const trays=new Set(cmd.objectIds.map((objectId:string)=>s!.objects[objectId].trayId??'dry'));
+      if(new Set(cmd.objectIds).size!==cmd.objectIds.length||trays.size!==1)throw new Rejected('INVALID_PAYLOAD');
+      ribbons[cmd.ribbonId]={id:cmd.ribbonId,objectIds:cmd.objectIds,closed:cmd.closed,color:cmd.color};
+     }
+     s.ribbons=ribbons;changed=true;events.push(this.snapshotEvent(s));break;
     }
     case 'animation.stopAll':client();this.stopAnimations(s,()=>true,Date.now());s.controlEpoch++;s.leases={};events.push(this.snapshotEvent(s));break;
     case 'permission.request':{
@@ -175,7 +220,7 @@ export class RoomDurableObject extends AdmissionRoom {
    const ack=this.message(s,'operation.ack',{operationId:cmd.operationId,sceneRevision:s.sceneRevision,...(cmd.objectId&&s.objects[cmd.objectId]?{objectRevision:s.objects[cmd.objectId].revision}:{}),serverMs:Math.max(0,Date.now()-receivedAt)});
    const committed=s;this.ctx.storage.transactionSync(()=>{
     const sql=this.ctx.storage.sql;
-    const newStep=(objectsBefore:string)=>{const step=(committed.historyCursor??0)+1;for(const table of ['history','tray_history'])sql.exec(`DELETE FROM ${table} WHERE step>=?`,step);sql.exec('INSERT INTO history VALUES(?,?,?)',step,objectsBefore,JSON.stringify(committed.objects));committed.historyCursor=step;for(const table of ['history','tray_history'])sql.exec(`DELETE FROM ${table} WHERE step<?`,step-99);return step;};
+    const newStep=(objectsBefore:string)=>{const step=(committed.historyCursor??0)+1;for(const table of HISTORY_TABLES)sql.exec(`DELETE FROM ${table} WHERE step>=?`,step);sql.exec('INSERT INTO history VALUES(?,?,?)',step,objectsBefore,JSON.stringify(committed.objects));recordRibbonStep(sql,step,beforeRibbons,JSON.stringify(committed.ribbons??{}));committed.historyCursor=step;for(const table of HISTORY_TABLES)sql.exec(`DELETE FROM ${table} WHERE step<?`,step-99);return step;};
     if(changed&&!historyMove){newStep(beforeObjects);delete committed.historyGesture;}
                                                                                                           
     if(trayWrite&&trayHistory){const merge=trayHistory.gesture!==undefined&&committed.historyGesture===trayHistory.gesture&&(committed.historyCursor??0)>0;const step=merge?committed.historyCursor!:newStep(JSON.stringify(committed.objects));recordTrayStep(sql,step,trayHistory.before,trayWrite);if(trayHistory.gesture)committed.historyGesture=trayHistory.gesture;else delete committed.historyGesture;}
@@ -205,7 +250,7 @@ export class RoomDurableObject extends AdmissionRoom {
   if(room){const s=JSON.parse(room.data) as RoomRecord;if(s.clinicId!==clinicId||s.sceneId!==sceneId)throw new Rejected('PERMISSION_DENIED');}
   this.ctx.storage.transactionSync(()=>{
    this.ctx.storage.sql.exec('INSERT OR REPLACE INTO room_erasure VALUES(1,?,?)',clinicId,sceneId);
-   for(const table of ['room','history','operations','room_cleanup','trays','tray_history'])this.ctx.storage.sql.exec(`DELETE FROM ${table}`);
+   for(const table of ['room','history','ribbon_history','operations','room_cleanup','trays','tray_history','tray_paint','tray_paint_history'])this.ctx.storage.sql.exec(`DELETE FROM ${table}`);
   });
   for(const ws of this.ctx.getWebSockets())ws.close(1000,'SCENE_DELETED');
   await this.scheduleRemaining();
@@ -231,7 +276,7 @@ export class RoomDurableObject extends AdmissionRoom {
   this.ctx.storage.sql.exec('CREATE TABLE IF NOT EXISTS operations (actor TEXT NOT NULL, epoch INTEGER NOT NULL, op TEXT NOT NULL, command TEXT NOT NULL, ack TEXT NOT NULL, PRIMARY KEY(actor,epoch,op))');this.ctx.storage.sql.exec(OPERATIONS_LOOKUP_INDEX);
   this.ctx.storage.sql.exec('CREATE TABLE IF NOT EXISTS history (step INTEGER PRIMARY KEY, before_state TEXT NOT NULL, after_state TEXT NOT NULL)');
   this.ctx.storage.sql.exec('CREATE TABLE IF NOT EXISTS room_cleanup (room_id TEXT PRIMARY KEY, clinic_id TEXT NOT NULL, scene_id TEXT NOT NULL, next_at INTEGER NOT NULL)');
-  this.ctx.storage.sql.exec(TRAYS_TABLE);this.ctx.storage.sql.exec(TRAY_HISTORY_TABLE);
+  for(const table of [...TRAY_TABLES,RIBBON_HISTORY_TABLE])this.ctx.storage.sql.exec(table);
   return {purged:true};
  }
  private async scheduleRemaining(){const at=this.cleanupDue();if(Number.isFinite(at))await this.ctx.storage.setAlarm(Math.max(Date.now()+1,at));}
@@ -257,7 +302,7 @@ export class RoomDurableObject extends AdmissionRoom {
                                                                                                                        
                                                                      
  protected clearActiveRoom(){
-  this.ctx.storage.sql.exec('DELETE FROM operations');this.ctx.storage.sql.exec('DELETE FROM history');this.ctx.storage.sql.exec('DELETE FROM trays');this.ctx.storage.sql.exec('DELETE FROM tray_history');this.ctx.storage.sql.exec('DELETE FROM room');
+  this.ctx.storage.sql.exec('DELETE FROM operations');this.ctx.storage.sql.exec('DELETE FROM history');this.ctx.storage.sql.exec('DELETE FROM ribbon_history');this.ctx.storage.sql.exec('DELETE FROM trays');this.ctx.storage.sql.exec('DELETE FROM tray_history');this.ctx.storage.sql.exec('DELETE FROM tray_paint');this.ctx.storage.sql.exec('DELETE FROM tray_paint_history');this.ctx.storage.sql.exec('DELETE FROM room');
  }
  async close(p:Identity){
                                                                                                                                

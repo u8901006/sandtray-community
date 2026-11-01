@@ -2,8 +2,9 @@ import {DurableObject} from 'cloudflare:workers';
 import type {Env,Identity} from './env';
 import {Rejected,type RoomState} from '../../../packages/room-core/src/index';
 import type {z} from 'zod';
-import {sceneObjectSchema,sceneSchema,roomTraysSchema,type RoomTrays} from '../../../packages/protocol/src/index';
-import {TRAYS_TABLE,TRAY_HISTORY_TABLE,readTrays,trayJson} from './trays';
+import {sceneObjectSchema,sceneSchema,roomTraysSchema,TUNNEL_DEFAULT,type RoomTrays,type Tunnel,type Ribbon} from '../../../packages/protocol/src/index';
+import {TRAY_TABLES,readTrays,trayJson} from './trays';
+import {RIBBON_HISTORY_TABLE} from './ribbons';
 import {peerOnline} from './peer-online';
 export interface RoomRecord extends Omit<RoomState,'objects'> {
                                                                   
@@ -17,6 +18,10 @@ export interface RoomRecord extends Omit<RoomState,'objects'> {
  lastCheckpointAt?:number;checkpointRevision?:number;checkpointId?:string;
  checkpointRetryAt?:number;checkpointFailed?:boolean;
  activeRoomFence?:number;
+                                                                           
+ tunnel?:Tunnel;
+                                                                                    
+ ribbons?:Record<string,Ribbon>;
 }
 export class AdmissionRoom extends DurableObject<Env> {
  constructor(ctx:DurableObjectState,env:Env){super(ctx,env);
@@ -24,7 +29,7 @@ export class AdmissionRoom extends DurableObject<Env> {
                                                                        
                                                
   ctx.storage.sql.exec('CREATE TABLE IF NOT EXISTS room_erasure (id INTEGER PRIMARY KEY CHECK(id=1), clinic_id TEXT NOT NULL, scene_id TEXT NOT NULL)');
-  ctx.storage.sql.exec(TRAYS_TABLE);ctx.storage.sql.exec(TRAY_HISTORY_TABLE);
+  for(const table of [...TRAY_TABLES,RIBBON_HISTORY_TABLE])ctx.storage.sql.exec(table);
  }
  protected read():RoomRecord {if(this.ctx.storage.sql.exec('SELECT id FROM room_erasure').toArray().length)throw new Rejected('PERMISSION_DENIED');const row=this.ctx.storage.sql.exec<{data:string}>('SELECT data FROM room WHERE id=1').toArray()[0];if(!row)throw new Rejected('PERMISSION_DENIED');const s=JSON.parse(row.data) as RoomRecord;if(s.status!=='ACTIVE'||s.lastActivity+7200000<=Date.now())throw new Rejected('ROOM_CLOSED');return s;}
  protected save(s:RoomRecord){this.ctx.storage.sql.exec('INSERT OR REPLACE INTO room VALUES(1,?)',JSON.stringify(s));}
@@ -64,7 +69,7 @@ export class AdmissionRoom extends DurableObject<Env> {
  async admit(p:Identity,participantId:string){const s=this.read();this.owner(s,p);if(s.waitingClient!==participantId)throw new Rejected('PERMISSION_DENIED');s.participants[participantId].admitted=true;s.lastActivity=Date.now();this.save(s);return {id:participantId};}
  async info(p:Identity){const s=this.read();this.member(s,p,false);return {retentionMode:s.retentionMode,policyVersion:s.policyVersion,roomId:s.roomId,sceneId:s.sceneId,role:p.role,participantId:p.participantId,admitted:s.participants[p.participantId].admitted,waitingClient:p.role==='therapist'&&s.waitingClient&&!s.participants[s.waitingClient]?.admitted?s.waitingClient:undefined,sessionEpoch:s.sessionEpoch,controlEpoch:s.controlEpoch,serverSeq:s.serverSeq,serverNow:Date.now(),...(s.participants[p.participantId].admitted?{grants:s.grants,leases:s.leases,exportConsent:s.exportConsent,requests:(s as RoomRecord & {requests?:unknown}).requests??{},peerOnline:peerOnline(s,p.participantId,Date.now())}:{})};}
                                                                                                                                                    
- async snapshot(p:Identity){const s=this.read();this.member(s,p);return {schemaVersion:2,sceneId:s.sceneId,sceneRevision:s.sceneRevision,trays:readTrays(this.ctx.storage.sql,s.trays).map(tray=>trayJson(tray,s.trays)),objects:Object.values(s.objects).map(o=>({...o,trayId:o.trayId??'dry'})),environment:{sandColor:'#deceac',backgroundColor:'#e9e5db'},updatedAt:s.lastActivity};}
+ async snapshot(p:Identity){const s=this.read();this.member(s,p);return {schemaVersion:2,sceneId:s.sceneId,sceneRevision:s.sceneRevision,trays:readTrays(this.ctx.storage.sql,s.trays).map(tray=>trayJson(tray,s.trays)),objects:Object.values(s.objects).map(o=>({...o,trayId:o.trayId??'dry'})),environment:{sandColor:'#deceac',backgroundColor:'#e9e5db'},updatedAt:s.lastActivity,tunnel:s.tunnel??TUNNEL_DEFAULT,...(s.ribbons&&Object.keys(s.ribbons).length?{ribbons:Object.values(s.ribbons)}:{})};}
  async consent(p:Identity,formats:string[]){const s=this.read();this.member(s,p);if(p.role!=='client')throw new Rejected('PERMISSION_DENIED');s.exportConsent={version:crypto.randomUUID(),epoch:s.sessionEpoch,formats};this.save(s);return {version:s.exportConsent.version};}
  async exportScene(p:Identity,format:string,consentVersion:string,expectedSceneRevision?:number){const s=this.read();this.member(s,p);if(p.role!=='client'&&(!s.exportConsent||s.exportConsent.version!==consentVersion||s.exportConsent.epoch!==s.sessionEpoch||!s.exportConsent.formats.includes(format)))throw new Rejected('PERMISSION_DENIED');if(format==='png'){if(expectedSceneRevision===undefined)throw new Rejected('INVALID_PAYLOAD');if(expectedSceneRevision!==s.sceneRevision||Object.values(s.objects).some(o=>o.animation?.state==='playing'))throw new Rejected('REVISION_CONFLICT');}return format==='json'?await this.snapshot(p):{authorized:true,sceneRevision:s.sceneRevision};}
  async close(p:Identity){const s=this.read();this.member(s,p);s.status='CLOSED';s.objects={};s.grants={};s.leases={};s.participants={};s.connections={};delete s.invite;delete s.waitingClient;this.save(s);for(const ws of this.ctx.getWebSockets())ws.close(1000,'ROOM_CLOSED');return {id:s.roomId,clinicId:s.clinicId,sceneId:s.sceneId};}

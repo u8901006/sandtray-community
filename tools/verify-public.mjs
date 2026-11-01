@@ -34,6 +34,6 @@ for(const asset of manifest.assets){
  const size=b.readUInt32LE(12);const json=JSON.parse(b.subarray(20,20+size).toString());
  for(const item of [...json.buffers??[],...json.images??[]])if(item.uri&&!item.uri.startsWith('data:'))throw Error('External GLB dependency: '+asset.id);
 }
-if(manifest.license!=='AGPL-3.0-only'||manifest.assets.length!==286)throw Error('Unexpected public release profile');
+if(manifest.license!=='AGPL-3.0-only'||manifest.assets.length!==291)throw Error('Unexpected public release profile');
 if(!manifest.sourceArchive||hash(readFileSync(resolve(root,manifest.sourceArchive.path)))!==manifest.sourceArchive.sha256)throw Error('Source archive mismatch');
 console.log(`PUBLIC_VERIFY_PASS files=${declared.size} assets=${manifest.assets.length} source=${manifest.sourceCommit}`);

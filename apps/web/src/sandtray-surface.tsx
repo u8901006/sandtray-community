@@ -4,7 +4,8 @@ import {ExtrudeGeometry,Shape,Path,ShapeGeometry,BufferGeometry,BufferAttribute,
 import {createTrayTextures} from './tray-textures';
 import {TrayModel,traySize,sandHeightsY,sandVerticesXZ,sandIndex,surfaceY,BLUE_WALL_INSET,BLUE_LIP_Y,CIRCLE_SEGMENTS,cellAt,type Point} from './tray-model';
 import {surfaceU8,DEFAULT_RADIUS_CM} from '../../../packages/sand-engine/src/core';
-import {clampToTray,CM_PER_UNIT,type TrayId,type TrayConfig} from '../../../packages/protocol/src/index';
+import {SPRAY_RADIUS_CM} from '../../../packages/sand-engine/src/paint';
+import {clampToTray,CM_PER_UNIT,SPRAY_COLORS,type TrayId,type TrayConfig} from '../../../packages/protocol/src/index';
                                                                                                                                   
                                                                                                                                      
                                                                                                                                     
@@ -21,7 +22,20 @@ export {BLUE_WALL_INSET};
                                                                                                                                      
                                                                                                                                         
 export type SandTool='dig'|'mound'|'smooth';
-export interface SculptHandlers {tool:SandTool|null;start:(trayId:TrayId,point:Point)=>void;move:(point:Point)=>void;end:()=>void}
+                                                                                                                
+export type TrayTool=SandTool|'spray';
+export interface SculptHandlers {tool:TrayTool|null;color?:string;start:(trayId:TrayId,point:Point)=>void;move:(point:Point)=>void;end:()=>void}
+                                                                                                                                         
+                                                                                                                                   
+                                                                                                                   
+export const SPRAY_OPACITY=.8;
+const SAND_AVERAGE=new Color('#d2c2a1');
+export const SPRAY_TINTS=SPRAY_COLORS.map(({hex})=>{const c=new Color(hex);return [c.r/SAND_AVERAGE.r,c.g/SAND_AVERAGE.g,c.b/SAND_AVERAGE.b] as const;});
+                                                                                                                                  
+export function paintedShade(shade:number,paint:number):[number,number,number]{
+ if(!paint)return [shade,shade,shade];const t=SPRAY_TINTS[paint-1],a=SPRAY_OPACITY;
+ return [shade*(1-a+a*t[0]),shade*(1-a+a*t[1]),shade*(1-a+a*t[2])];
+}
                                                                                                                                               
 export function trayOutline(config:TrayConfig,grow=0):[number,number][]{
  const size=traySize(config),hx=size.x/2+grow,hz=size.z/2+grow;
@@ -72,13 +86,13 @@ export function createSand(model:TrayModel){
  return geometry;
 }
 export function updateSand(geometry:BufferGeometry,model:TrayModel,wet:boolean){
- const hm=model.display,data=hm.data,surface=surfaceU8(hm.depthCm),positions=geometry.getAttribute('position') as BufferAttribute,colors=geometry.getAttribute('color') as BufferAttribute,tint=wet?.86:1,heights=sandHeightsY(hm);
+ const hm=model.display,data=hm.data,paint=model.displayPaint,surface=surfaceU8(hm.depthCm),positions=geometry.getAttribute('position') as BufferAttribute,colors=geometry.getAttribute('color') as BufferAttribute,tint=wet?.86:1,heights=sandHeightsY(hm);
  for(let k=0;k<data.length;k++){
   const v=data[k];
                                                                                                                                 
   positions.array[k*3+1]=heights[k];
                                                                               
-  const shade=tint*(v<surface?.5+.5*v/surface:1+.08*(v-surface)/(255-surface));colors.array[k*3]=shade;colors.array[k*3+1]=shade;colors.array[k*3+2]=shade;
+  const shade=tint*(v<surface?.5+.5*v/surface:1+.08*(v-surface)/(255-surface)),[r,g,b]=paintedShade(shade,paint[k]);colors.array[k*3]=r;colors.array[k*3+1]=g;colors.array[k*3+2]=b;
  }
  positions.needsUpdate=true;colors.needsUpdate=true;geometry.computeVertexNormals();geometry.computeBoundingSphere();geometry.computeBoundingBox();
  return heights;
@@ -166,8 +180,9 @@ export function createWater(model:TrayModel){
                                                                               
                                                                   
 export const BRUSH_RADIUS_UNITS=DEFAULT_RADIUS_CM/CM_PER_UNIT;
+export const SPRAY_RADIUS_UNITS=SPRAY_RADIUS_CM/CM_PER_UNIT;
 export type HoverHandler=(hover:{trayId:TrayId;x:number;z:number}|null)=>void;
-function SandTray({id,x,model,textures,placing,sculpt,onPlace,onHover,sky}:{sky?:{zenith:string;horizon:string};id:TrayId;x:number;model:TrayModel;textures:ReturnType<typeof createTrayTextures>;placing:boolean;sculpt:SculptHandlers;onPlace:(trayId:TrayId,x:number,z:number,event:ThreeEvent<MouseEvent>)=>void;onHover?:HoverHandler}){
+function SandTray({id,x,model,textures,placing,sculpt,onPlace,onHover,sky,hidden=false}:{sky?:{zenith:string;horizon:string};hidden?:boolean;id:TrayId;x:number;model:TrayModel;textures:ReturnType<typeof createTrayTextures>;placing:boolean;sculpt:SculptHandlers;onPlace:(trayId:TrayId,x:number,z:number,event:ThreeEvent<MouseEvent>)=>void;onHover?:HoverHandler}){
  const {invalidate,controls,gl}=useThree();const [config,setConfig]=useState(model.config);
  const sand=useMemo(()=>createSand(model),[model,config]);const shell=useMemo(()=>createShell(config),[config]);const water=useMemo(()=>id==='wet'?createWater(model):null,[model,config,id]);
  const mesh=useRef<Mesh>(null);const [level,setLevel]=useState(model.water);
@@ -205,7 +220,9 @@ function SandTray({id,x,model,textures,placing,sculpt,onPlace,onHover,sky}:{sky?
  useEffect(()=>{if(!water||!sky)return;(water.material.uniforms.uSkyZenith.value as Color).set(sky.zenith);(water.material.uniforms.uSkyHorizon.value as Color).set(sky.horizon);invalidate();},[water,sky?.zenith,sky?.horizon,invalidate]);
  const shore=useMemo(()=>({value:NO_SHORE}),[]);const onShore=useMemo(()=>id==='wet'?wetShore(shore):()=>{},[id,shore]);
  useEffect(()=>{shore.value=id==='wet'&&level>0?-depth+level*depth:NO_SHORE;invalidate();},[shore,id,level,depth,invalidate]);
- return <group position={[x,0,0]} userData={{sandtrayTrayId:id}}>
+                                                                                                 
+                            
+ return <group position={[x,0,0]} visible={!hidden} userData={{sandtrayTrayId:id}}>
   {/* wood shell: outer walls (no lid, so the blue inside stays visible) and the rim, following the tray outline */}
   <mesh geometry={shell.walls} receiveShadow><meshStandardMaterial map={textures.wood} color="#e5d8c4" roughness={.75}/></mesh>
   <mesh geometry={shell.rim} castShadow receiveShadow><meshStandardMaterial map={textures.wood} color="#eddfcb" roughness={.65}/></mesh>
@@ -214,25 +231,25 @@ function SandTray({id,x,model,textures,placing,sculpt,onPlace,onHover,sky}:{sky?
   <mesh geometry={shell.strip}><meshStandardMaterial color={BLUE} side={DoubleSide} roughness={.55}/></mesh>
   <mesh geometry={shell.lip}><meshStandardMaterial color={BLUE} side={DoubleSide} roughness={.55}/></mesh>
   <mesh ref={mesh} geometry={sand} receiveShadow castShadow={false}
-   onClick={e=>{if(sculpt.tool&&!placing)return;e.stopPropagation();const local=toLocal(e.point);onPlace(id,local.x,local.z,e);}}
+   onClick={e=>{if(hidden||sculpt.tool&&!placing)return;e.stopPropagation();const local=toLocal(e.point);onPlace(id,local.x,local.z,e);}}
    onPointerDown={e=>{
-    if(!sculpt.tool||placing||e.button!==0||(e.pointerType==='touch'&&!e.isPrimary))return;const cell=hit(e);if(!cell)return;
+    if(hidden||!sculpt.tool||placing||e.button!==0||(e.pointerType==='touch'&&!e.isPrimary))return;const cell=hit(e);if(!cell)return;
     e.stopPropagation();active.current=true;if(orbit)orbit.enabled=false;(e.target as Element).setPointerCapture?.(e.pointerId);sculpt.start(id,cell);
    }}
-   onPointerMove={e=>{hover(e);if(!active.current)return;e.stopPropagation();const cell=hit(e);if(cell)sculpt.move(cell);}}
+   onPointerMove={e=>{if(hidden)return;hover(e);if(!active.current)return;e.stopPropagation();const cell=hit(e);if(cell)sculpt.move(cell);}}
    onPointerLeave={()=>hover(null)}
    onPointerUp={e=>{if(!active.current)return;e.stopPropagation();(e.target as Element).releasePointerCapture?.(e.pointerId);stop();}}>
    <meshStandardMaterial map={textures.sand} normalMap={textures.normal} normalScale={[.32,.32]} vertexColors roughness={.98} envMapIntensity={.25} onBeforeCompile={onShore} customProgramCacheKey={()=>id==='wet'?'sand-wet-shore':'sand'}/>
   </mesh>
   <mesh ref={marker} visible={false} rotation={[-Math.PI/2,0,0]} renderOrder={3} raycast={()=>null}>
-   {placing?<circleGeometry args={[.55,40]}/>:<ringGeometry args={[BRUSH_RADIUS_UNITS*.92,BRUSH_RADIUS_UNITS,48]}/>}
-   <meshBasicMaterial color={placing?'#2b2a24':'#c9773b'} transparent opacity={placing?.22:.85} depthTest={false} depthWrite={false}/>
+   {placing?<circleGeometry args={[.55,40]}/>:sculpt.tool==='spray'?<ringGeometry key="spray" args={[SPRAY_RADIUS_UNITS*.88,SPRAY_RADIUS_UNITS,48]}/>:<ringGeometry key="brush" args={[BRUSH_RADIUS_UNITS*.92,BRUSH_RADIUS_UNITS,48]}/>}
+   <meshBasicMaterial color={placing?'#2b2a24':sculpt.tool==='spray'&&sculpt.color?sculpt.color:'#c9773b'} transparent opacity={placing?.22:.85} depthTest={false} depthWrite={false}/>
   </mesh>
   {water&&level>0&&<mesh geometry={water.geometry} material={water.material} position={[0,-depth+level*depth,0]} renderOrder={1} raycast={()=>null}/>}
  </group>;
 }
-export function SandtraySurface({models,offsets,placing,sculpt,onPlace,onHover,sky}:{models:Record<TrayId,TrayModel>;offsets:Record<TrayId,number>;placing:boolean;sculpt:SculptHandlers;onPlace:(trayId:TrayId,x:number,z:number,event:ThreeEvent<MouseEvent>)=>void;onHover?:HoverHandler;sky?:{zenith:string;horizon:string}}){
+export function SandtraySurface({models,offsets,placing,sculpt,onPlace,onHover,sky,hidden=null}:{models:Record<TrayId,TrayModel>;offsets:Record<TrayId,number>;hidden?:TrayId|null;placing:boolean;sculpt:SculptHandlers;onPlace:(trayId:TrayId,x:number,z:number,event:ThreeEvent<MouseEvent>)=>void;onHover?:HoverHandler;sky?:{zenith:string;horizon:string}}){
  const [textures]=useState(createTrayTextures);const {gl}=useThree();
  useEffect(()=>{for(const map of [textures.sand,textures.normal,textures.wood])map.anisotropy=Math.min(8,gl.capabilities.getMaxAnisotropy());return()=>{textures.dispose();};},[textures,gl]);
- return <group>{(['dry','wet'] as const).map(id=><SandTray key={id} id={id} x={offsets[id]} model={models[id]} textures={textures} placing={placing} sculpt={sculpt} onPlace={onPlace} onHover={onHover} sky={sky}/>)}</group>;
+ return <group>{(['dry','wet'] as const).map(id=><SandTray key={id} id={id} x={offsets[id]} model={models[id]} hidden={hidden===id} textures={textures} placing={placing} sculpt={sculpt} onPlace={onPlace} onHover={onHover} sky={sky}/>)}</group>;
 }

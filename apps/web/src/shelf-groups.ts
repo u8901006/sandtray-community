@@ -9,7 +9,7 @@ export const SHELF_GROUPS:readonly ShelfGroup[]=[
  {id:'transport',label:'交通',glyph:'車',categories:['交通']},
  {id:'fantasy',label:'奇幻神話',glyph:'幻',categories:['神話','奇幻','奇幻道具','地城','骷髏','武器盾牌']},
  {id:'scifi',label:'科幻',glyph:'星',categories:['太空基地','科幻外星生物','科幻道具','科幻平台','科幻柱體','科幻牆面','科幻貼花']},
- {id:'daily',label:'日常',glyph:'物',categories:['家具','食物','廚房','節慶','探險工具','寶藏與材料','中世紀道具','競技場']},
+ {id:'daily',label:'日常',glyph:'物',categories:['家具','布','食物','廚房','節慶','探險工具','寶藏與材料','中世紀道具','競技場']},
                                                                                                                                     
  {id:'conflict',label:'衝突武器',glyph:'戈',categories:['衝突武器']},
  {id:'symbols',label:'象徵',glyph:'心',categories:['象徵','桌遊']},
